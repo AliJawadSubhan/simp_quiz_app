@@ -20,7 +20,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   bloc: ^8.1.2
   flutter_bloc: ^8.1.3
-  get:
+  connectivity_plus: ^5.0.1
+  # get:
   firebase_core:
   firebase_auth: ^4.11.1
   get_it: ^7.6.4

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "516623224315",
+    "project_id": "bloc-cool-flutter",
+    "storage_bucket": "bloc-cool-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516623224315:android:59ca10bcd1c24ccc17cf5e",
+        "android_client_info": {
+          "package_name": "com.example.employee_attendance"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd-QfBCj6PvCj32kE2X35PmsFHZ639Nh4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516623224315:android:83d4897acf6d857317cf5e",
+        "android_client_info": {
+          "package_name": "com.example.simp_quiz_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd-QfBCj6PvCj32kE2X35PmsFHZ639Nh4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

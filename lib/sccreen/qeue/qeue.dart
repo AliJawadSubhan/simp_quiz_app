@@ -40,8 +40,6 @@ class _QueueScreenState extends State<QueueScreen> {
     });
   }
 
- 
-
   AuthServices authServices = AuthServices();
 
   // UserModel opponent;
@@ -63,28 +61,21 @@ class _QueueScreenState extends State<QueueScreen> {
 
   FireStoreService dbService = FireStoreService();
 
-  Future<MultiplayerRoom> generateRoom() async {
+  List<UserModel> listOfUsersWithoutThecurrentOne = [];
+  logValues() async {
     UserModel opponent = await pickRandomOpponent();
-    MultiplayerRoom room = dbService.createARoom(
+    MultiplayerRoom room = await dbService.createARoom(
         widget.userModel.userUID.toString(), opponent.userUID.toString());
-    return room;
+    log("${room.id} Room ID");
+    log("${room.user1.user_uid} my id");
+    log("${room.user2.user_uid} opponent id");
+    log("${opponent.username} Username");
   }
 
-  List<UserModel> listOfUsersWithoutThecurrentOne = [];
- logValues()  async {
-  MultiplayerRoom room = await generateRoom();
-  log(room.id.toString() + " Room ID");
-  log(room.user1.user_uid.toString()+ " my id");
-
-  log(room.user2.user_uid.toString()+ " opponent id");
-  UserModel pickopponent = await pickRandomOpponent();
-  log(pickopponent.username.toString() + " Username");
-
- }
   @override
   Widget build(BuildContext context) {
     log("length ${listOfUsersWithoutThecurrentOne.length}");
-    
+
     return Scaffold(
       body: Center(
         child: GestureDetector(

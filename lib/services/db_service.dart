@@ -19,22 +19,36 @@ class FireStoreService {
     }
   }
 
-  MultiplayerRoom createARoom(String userId1, String userId2) {
-    final roomMultiplayerCollection = db.collection("multiplayerRoom");
+  Future<MultiplayerRoom> createARoom(String userId1, String userId2) async {
+  final roomMultiplayerCollection = db.collection("multiplayerRoom");
+  final existingRoomQuery = await roomMultiplayerCollection
+      .where('user1.user_uid', isEqualTo: userId1)
+      .where('user2.user_uid', isEqualTo: userId2)
+      .get();
+final secondExistingRoomQuery = await roomMultiplayerCollection
+      .where('user1.user_uid', isEqualTo: userId2)
+      .where('user2.user_uid', isEqualTo: userId1)
+      .get();
+  if (existingRoomQuery.docs.isNotEmpty || secondExistingRoomQuery.docs.isNotEmpty) {
+    throw Exception('Room with these users already exists');
+  } else {
     final roomID = roomMultiplayerCollection.doc().id;
 
     MultiplayerUser user1 = MultiplayerUser(user_uid: userId1);
-
     MultiplayerUser user2 = MultiplayerUser(user_uid: userId2);
+
     MultiplayerRoom multiplayerRoom =
         MultiplayerRoom(id: roomID, user1: user1, user2: user2);
+
     try {
-      roomMultiplayerCollection.doc(roomID).set(multiplayerRoom.toFirebase());
+      await roomMultiplayerCollection.doc(roomID).set(multiplayerRoom.toFirebase());
+      return multiplayerRoom;
     } catch (e) {
       log(e.toString());
+      rethrow;
     }
-    return multiplayerRoom;
   }
+}
 
   Stream<List<QuizQuestionModel>> getQuizQuestions() {
     final productCollectoin = db.collection('quiz_questions').snapshots();

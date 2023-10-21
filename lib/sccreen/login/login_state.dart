@@ -9,7 +9,11 @@ class LoginErrorState extends LoginState {
   LoginErrorState({required this.ERRORSTATE});
 }
 
-class LoginAccceptedState extends LoginActionState {}
+class LoginAccceptedState extends LoginActionState {
+  final String username, user_uid;
+
+  LoginAccceptedState({required this.username, required this.user_uid});
+}
 
 
 class LoginDataRecivedState extends LoginState {

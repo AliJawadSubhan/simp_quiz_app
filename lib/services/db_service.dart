@@ -19,9 +19,9 @@ class FireStoreService {
     }
   }
 
- MultiplayerRoom createARoom(String userId1, String userId2) {
-    final roomMultiplayer = db.collection("room");
-    final roomID = roomMultiplayer.id;
+  MultiplayerRoom createARoom(String userId1, String userId2) {
+    final roomMultiplayerCollection = db.collection("multiplayerRoom");
+    final roomID = roomMultiplayerCollection.doc().id;
 
     MultiplayerUser user1 = MultiplayerUser(user_uid: userId1);
 
@@ -29,7 +29,7 @@ class FireStoreService {
     MultiplayerRoom multiplayerRoom =
         MultiplayerRoom(id: roomID, user1: user1, user2: user2);
     try {
-      roomMultiplayer.doc(roomID).set(multiplayerRoom.toFirebase());
+      roomMultiplayerCollection.doc(roomID).set(multiplayerRoom.toFirebase());
     } catch (e) {
       log(e.toString());
     }
@@ -38,7 +38,7 @@ class FireStoreService {
 
   Stream<List<QuizQuestionModel>> getQuizQuestions() {
     final productCollectoin = db.collection('quiz_questions').snapshots();
-    log('Product Collection: ${productCollectoin.first.then((value) => value)}');
+    log('Quiz Collection: ${productCollectoin.first.then((value) => value)}');
 
     return productCollectoin.map((querySnapshots) {
       final categoryList = <QuizQuestionModel>[];
@@ -50,6 +50,26 @@ class FireStoreService {
         log('Data : ${data.get('options')}');
       }
       return categoryList;
+    });
+  }
+
+  Stream<List<UserModel>> getUsersButWithoutTheCurrentOne(
+      String currentUserID) {
+    final userCollection = db
+        .collection("users")
+        .where("user_id", isNotEqualTo: currentUserID)
+        .snapshots();
+
+    return userCollection.map((querySnapshots) {
+      final userList = <UserModel>[];
+      log('querysnapshot.length: ${querySnapshots.docs.length}');
+      for (var data in querySnapshots.docs) {
+        UserModel userModel = UserModel.fromSnapshot(data);
+        userList.add(userModel);
+        log('Category Model: ${userModel.username}');
+        log('Data : ${data.get('user_id')}');
+      }
+      return userList;
     });
   }
 

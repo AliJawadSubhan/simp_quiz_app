@@ -8,7 +8,7 @@ class UserModel {
     final data = snapshot.data() as Map<String, dynamic>;
     return UserModel(
       username: data['username'],
-      userUID: data["userUID"],
+      userUID: data["user_id"],
     );
   }
 }

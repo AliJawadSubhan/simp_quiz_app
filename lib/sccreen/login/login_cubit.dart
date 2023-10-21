@@ -2,17 +2,18 @@
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simp_quiz_app/injection.dart';
+import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/login/login_state.dart';
 import 'package:simp_quiz_app/services/auth_serivces.dart';
+// import 'package:simp_quiz_app/user_provider.dart';
 
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitialState());
-  // AuthServices authServices = Locators.locator<AuthServices>();
 
-  AuthServices authServices = AuthServices();
-
+// final userData = getIt<UserData>(); 
+  AuthServices authServices = getIt<AuthServices>();
   userUILogic(String input) {
-    emit(LoginLoadingSTATE());
+    // emit(LoginLoadingSTATE());
     if (input.isEmpty) {
       emit(
         LoginSOFTErroRsTATE(softError: "Please input a valid name."),
@@ -30,13 +31,17 @@ class LoginCubit extends Cubit<LoginState> {
     }
   }
 
+  UserModel? userModel;
   _userTapLogin(String username) async {
     await Future.delayed(const Duration(seconds: 2));
     emit(LoginLoadingSTATE());
     // please help me fix the logic
     try {
-      authServices.loginService(username);
-      emit(LoginAccceptedState());
+      userModel = await authServices.createGuestUser(username);
+      emit(LoginAccceptedState(
+        user_uid: userModel!.userUID!,
+        username: userModel!.username!,
+      ));
     } catch (e) {
       emit(LoginErrorState(ERRORSTATE: e.toString()));
     }

@@ -21,6 +21,7 @@ dependencies:
   bloc: ^8.1.2
   flutter_bloc: ^8.1.3
   connectivity_plus: ^5.0.1
+  provider:
   # get:
   firebase_core:
   firebase_auth: ^4.11.1

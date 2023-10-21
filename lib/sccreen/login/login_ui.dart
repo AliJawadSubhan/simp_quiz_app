@@ -1,9 +1,13 @@
+// ignore_for_file: must_be_immutable
+
 import 'dart:developer';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/login/login_cubit.dart';
 import 'package:simp_quiz_app/sccreen/login/login_state.dart';
-import 'package:simp_quiz_app/sccreen/quiz/quiz_screen.dart';
+import 'package:simp_quiz_app/sccreen/qeue/qeue.dart';
 
 class LoginUI extends StatelessWidget {
   LoginUI({super.key});
@@ -55,11 +59,15 @@ class LoginUI extends StatelessWidget {
                 );
               }
               if (state is LoginAccceptedState) {
+                UserModel userModel = UserModel(
+                    username: state.username, userUID: state.user_uid);
                 Navigator.push(context, MaterialPageRoute(
                   builder: (_) {
                     return BlocProvider.value(
                       value: loginCubit,
-                      child: const QuizScreen(),
+                      child: QueueScreen(
+                        userModel: userModel,
+                      ),
                     );
                   },
                 ));
@@ -90,7 +98,7 @@ class LoginUI extends StatelessWidget {
                       child: Column(
                         children: <Widget>[
                           Text(
-                            "Exotic Login",
+                            "Login",
                             style: TextStyle(
                               fontSize: 28.0,
                               color: Colors.teal.shade900, // Exotic text color
@@ -132,7 +140,8 @@ class LoginUI extends StatelessWidget {
                               // Add your login logic here
                               // myQuizModel();
                               log(nameController.text.trim());
-                              loginCubit.userUILogic(nameController.text.trim());
+                              loginCubit
+                                  .userUILogic(nameController.text.trim());
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.teal

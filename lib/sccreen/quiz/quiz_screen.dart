@@ -102,6 +102,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                 quizCubit.pickedOption();
                               },
                               child: Text(
+                                // ignore: prefer_interpolation_to_compose_strings
                                 "${index + 1}: "+state.quizBrain.quizOptions(state.quizQuestions)[index],
                                 style: const TextStyle(color: Colors.white),
                               ),
@@ -112,7 +113,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     ],
                   );
                 }
-                return Text("123333");
+                return const Text("123333");
               }),
         ),
       ),

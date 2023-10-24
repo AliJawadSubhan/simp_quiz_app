@@ -34,10 +34,12 @@ class MultiplayerRoom {
 
 class MultiplayerUser {
   final String user_uid;
+  final String username;
   int correctAnswer;
   int incorrectAnswer;
 
   MultiplayerUser({
+    required this.username,
     required this.user_uid,
     this.correctAnswer = 0,
     this.incorrectAnswer = 0,
@@ -48,11 +50,13 @@ class MultiplayerUser {
       'user_uid': user_uid,
       'correctAnswer': correctAnswer,
       'incorrectAnswer': incorrectAnswer,
+      "username": username,
     };
   }
 
   factory MultiplayerUser.fromFirebase(Map<String, dynamic> userData) {
     return MultiplayerUser(
+      username: userData['username'],
       user_uid: userData['user_uid'],
       correctAnswer: userData['correctAnswer'] ?? 0,
       incorrectAnswer: userData['incorrectAnswer'] ?? 0,

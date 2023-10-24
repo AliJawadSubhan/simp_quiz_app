@@ -3,6 +3,7 @@ import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/login/login_ui.dart';
 import 'package:simp_quiz_app/sccreen/qeue/qeue_logic.dart';
+import 'package:simp_quiz_app/sccreen/quiz/quiz_screen.dart';
 import 'package:simp_quiz_app/services/auth_serivces.dart';
 import 'dart:developer';
 import 'dart:math' as math;
@@ -20,12 +21,39 @@ class _QueueScreenState extends State<QueueScreen> {
   @override
   void initState() {
     super.initState();
-    log("Username: ${widget.userModel.username}");
-    log("User id: ${widget.userModel.userUID}");
-    listofUsersWithoutID();
-    // pickRandomOpponent();
-    // generateRoom();
-    logValues();
+    initialize();
+  }
+
+  Future<void> initialize() async {
+    // log("Your Username: ${widget.userModel.username}");
+    // log(" Your User id: ${widget.userModel.userUID}");
+    await listofUsersWithoutID();
+    await pickRandomOpponent();
+    UserModel opponent = await pickRandomOpponent();
+    MultiplayerRoom room = await dbService.createARoom(
+      userId1: widget.userModel.userUID.toString(),
+      userId2: opponent.userUID.toString(),
+      username1: widget.userModel.username.toString(),
+      username2: opponent.username.toString(),
+    );
+    // log("${room.id} Room ID");
+    // log("${room.user1.user_uid} my id");
+    // log("${room.user2.user_uid} opponent id");
+
+    // log("${room.user2.username} opponent NAME from MULTIPLAYER ROOM");
+    // log("${opponent.username} Username");
+    navigateToNextScreen(room);
+  }
+
+  void navigateToNextScreen(room) {
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (context) => QuizScreen(
+          thisRoom: room,
+          currentUser: widget.userModel,
+        ),
+      ),
+    );
   }
 
   final FireStoreService _fireStoreService = FireStoreService();
@@ -62,15 +90,7 @@ class _QueueScreenState extends State<QueueScreen> {
   FireStoreService dbService = FireStoreService();
 
   List<UserModel> listOfUsersWithoutThecurrentOne = [];
-  logValues() async {
-    UserModel opponent = await pickRandomOpponent();
-    MultiplayerRoom room = await dbService.createARoom(
-        widget.userModel.userUID.toString(), opponent.userUID.toString());
-    log("${room.id} Room ID");
-    log("${room.user1.user_uid} my id");
-    log("${room.user2.user_uid} opponent id");
-    log("${opponent.username} Username");
-  }
+  logValues() async {}
 
   @override
   Widget build(BuildContext context) {

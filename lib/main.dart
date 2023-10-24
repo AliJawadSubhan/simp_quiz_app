@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simp_quiz_app/firebase_options.dart';
@@ -7,7 +6,6 @@ import 'package:simp_quiz_app/injection.dart';
 import 'package:simp_quiz_app/sccreen/login/login_cubit.dart';
 import 'package:simp_quiz_app/sccreen/login/login_ui.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
-import 'package:simp_quiz_app/sccreen/quiz/quiz_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

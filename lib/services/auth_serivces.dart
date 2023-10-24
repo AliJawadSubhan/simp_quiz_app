@@ -1,10 +1,8 @@
 import 'dart:developer';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:simp_quiz_app/injection.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/services/db_service.dart';
-import 'package:simp_quiz_app/user_provider.dart';
 
 class AuthServices {
   // final userData = getIt<UserData>();

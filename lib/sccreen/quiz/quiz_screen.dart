@@ -4,13 +4,17 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simp_quiz_app/model/quiz_question.dart';
+import 'package:simp_quiz_app/model/room_model.dart';
+import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_state.dart';
 // import 'package:simp_quiz_app/quiz_cubit.dart';
 
 class QuizScreen extends StatefulWidget {
-  const QuizScreen({super.key});
-
+  const QuizScreen(
+      {super.key, required this.thisRoom, required this.currentUser});
+  final MultiplayerRoom thisRoom;
+  final UserModel currentUser;
   @override
   State<QuizScreen> createState() => _QuizScreenState();
 }
@@ -38,15 +42,25 @@ class _QuizScreenState extends State<QuizScreen> {
   // }
 
   // Quizmraom quizBrain = Quizmraom();
+
+  QuizCubit quizCubit = QuizCubit();
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    quizCubit.updateMultiplayerRoom(widget.thisRoom, widget.currentUser);
+    
+    // log("This will be build once?i---"); /
+  }
+
   @override
   Widget build(BuildContext context) {
     // myQuizModel();
-    QuizCubit quizCubit = QuizCubit();
-    log("This will be build once?i---");
-    final TextEditingController nameController = TextEditingController();
-    // ---------                     -------                    --------------
+    // final TextEditingController nameController = TextEditingController();
+    // // ---------                     -------                    --------------
     return Scaffold(
-      backgroundColor: Colors.purple.shade100, // Background color
+      backgroundColor: Colors.blue.shade200, // Background color
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -62,15 +76,19 @@ class _QuizScreenState extends State<QuizScreen> {
                   );
                 }
                 // if (state is Login) {
-                  
+
                 // }
                 if (state is QuizDataState) {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      const Text(
-                        "Your Opponent: SuperMonkey",
-                        style: TextStyle(color: Colors.red),
+                      Text(
+                        "Your Opponent: ${quizCubit.yourOpponent?.username}",
+                        style: const TextStyle(color: Colors.red),
+                      ),
+                      Text(
+                        "You: ${quizCubit.you?.username}",
+                        style: const TextStyle(color: Colors.red),
                       ),
                       Text(
                         state.quizBrain
@@ -103,7 +121,9 @@ class _QuizScreenState extends State<QuizScreen> {
                               },
                               child: Text(
                                 // ignore: prefer_interpolation_to_compose_strings
-                                "${index + 1}: "+state.quizBrain.quizOptions(state.quizQuestions)[index],
+                                "${index + 1}: " +
+                                    state.quizBrain.quizOptions(
+                                        state.quizQuestions)[index],
                                 style: const TextStyle(color: Colors.white),
                               ),
                             );

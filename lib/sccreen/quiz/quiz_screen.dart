@@ -46,11 +46,10 @@ class _QuizScreenState extends State<QuizScreen> {
   QuizCubit quizCubit = QuizCubit();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     quizCubit.updateMultiplayerRoom(widget.thisRoom, widget.currentUser);
-    
+
     // log("This will be build once?i---"); /
   }
 

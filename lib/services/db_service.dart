@@ -110,6 +110,7 @@ class FireStoreService {
   }
 
   UserModel? getUserByID({required String USERID}) {
+    debugPrint("===> MyUserId $USERID");
     UserModel? userModel;
     db
         .collection("users")

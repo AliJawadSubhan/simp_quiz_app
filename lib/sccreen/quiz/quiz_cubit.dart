@@ -26,19 +26,19 @@ class QuizCubit extends Cubit<QuizState> {
   //  UserModel? constructureUser;
   UserModel? you;
   UserModel? yourOpponent;
-
   Future<void> updateMultiplayerRoom(
       MultiplayerRoom newRoom, UserModel youu) async {
     room = newRoom;
     you = youu;
 
-    var user1Function =
-        fireStoreService.getUserByID(userid: room!.user1.user_uid.toString());
-    if (user1Function?.userUID != you!.userUID) {
+    var user1Function = await fireStoreService.getUserByID(
+        userid: room!.user1.user_uid.toString());
+
+    if (user1Function != null && user1Function.userUID != you!.userUID) {
       yourOpponent = user1Function;
     } else {
-      user1Function =
-          fireStoreService.getUserByID(userid: room!.user2.user_uid.toString());
+      user1Function = await fireStoreService.getUserByID(
+          userid: room!.user2.user_uid.toString());
       yourOpponent = user1Function;
     }
   }

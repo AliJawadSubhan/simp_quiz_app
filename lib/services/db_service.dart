@@ -109,14 +109,25 @@ class FireStoreService {
     });
   }
 
-  UserModel? getUserByID({required String userid}) {
-    debugPrint("===> MyUserId $userid");
-    UserModel? userModel;
-    db
-        .collection("users")
-        .doc(userid)
-        .snapshots()
-        .map((event) => userModel = UserModel.fromSnapshot(event));
-    return userModel;
+  Future<UserModel?> getUserByID({required String userid}) async {
+  debugPrint("===> MyUserId $userid");
+  UserModel? userModel;
+
+  try {
+    final snapshot = await db.collection("users").doc(userid).get();
+
+    if (snapshot.exists) {
+      userModel = UserModel.fromSnapshot(snapshot);
+      debugPrint(userModel.username! + " username");
+      return userModel;
+    } else {
+      debugPrint("User not found");
+      return null;
+    }
+  } catch (error) {
+    debugPrint("Error retrieving user: $error");
+    return null;
   }
+}
+
 }

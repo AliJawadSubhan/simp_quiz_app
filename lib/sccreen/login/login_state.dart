@@ -5,14 +5,13 @@ class LoginActionState extends LoginState {}
 class LoginInitialState extends LoginState {}
 class LoginErrorState extends LoginState {
   final String ERRORSTATE;
-
   LoginErrorState({required this.ERRORSTATE});
 }
 
 class LoginAccceptedState extends LoginActionState {
-  final String username, user_uid;
+  final String username, userUid;
 
-  LoginAccceptedState({required this.username, required this.user_uid});
+  LoginAccceptedState({required this.username, required this.userUid});
 }
 
 

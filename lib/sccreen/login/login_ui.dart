@@ -59,8 +59,8 @@ class LoginUI extends StatelessWidget {
                 );
               }
               if (state is LoginAccceptedState) {
-                UserModel userModel = UserModel(
-                    username: state.username, userUID: state.user_uid);
+                UserModel userModel =
+                    UserModel(username: state.username, userUID: state.userUid);
                 Navigator.push(context, MaterialPageRoute(
                   builder: (_) {
                     return BlocProvider.value(

@@ -109,12 +109,12 @@ class FireStoreService {
     });
   }
 
-  UserModel? getUserByID({required String USERID}) {
-    debugPrint("===> MyUserId $USERID");
+  UserModel? getUserByID({required String userid}) {
+    debugPrint("===> MyUserId $userid");
     UserModel? userModel;
     db
         .collection("users")
-        .doc(USERID)
+        .doc(userid)
         .snapshots()
         .map((event) => userModel = UserModel.fromSnapshot(event));
     return userModel;

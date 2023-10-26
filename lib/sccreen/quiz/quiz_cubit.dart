@@ -32,11 +32,13 @@ class QuizCubit extends Cubit<QuizState> {
     room = newRoom;
     you = youu;
 
-    var user1Function = fireStoreService.getUserByID(USERID: room!.user1.user_uid.toString());
+    var user1Function =
+        fireStoreService.getUserByID(userid: room!.user1.user_uid.toString());
     if (user1Function?.userUID != you!.userUID) {
       yourOpponent = user1Function;
     } else {
-      user1Function = fireStoreService.getUserByID(USERID: room!.user2.user_uid.toString());
+      user1Function =
+          fireStoreService.getUserByID(userid: room!.user2.user_uid.toString());
       yourOpponent = user1Function;
     }
   }

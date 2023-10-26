@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/login/login_ui.dart';
-import 'package:simp_quiz_app/sccreen/qeue/qeue_logic.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_screen.dart';
 import 'package:simp_quiz_app/services/auth_serivces.dart';
 import 'dart:developer';
@@ -36,12 +35,6 @@ class _QueueScreenState extends State<QueueScreen> {
       username1: widget.userModel.username.toString(),
       username2: opponent.username.toString(),
     );
-    // log("${room.id} Room ID");
-    // log("${room.user1.user_uid} my id");
-    // log("${room.user2.user_uid} opponent id");
-
-    // log("${room.user2.username} opponent NAME from MULTIPLAYER ROOM");
-    // log("${opponent.username} Username");
     navigateToNextScreen(room);
   }
 

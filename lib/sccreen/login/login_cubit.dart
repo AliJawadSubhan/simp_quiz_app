@@ -1,5 +1,6 @@
 // class LoginState
 
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simp_quiz_app/injection.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
@@ -10,7 +11,7 @@ import 'package:simp_quiz_app/services/auth_serivces.dart';
 class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitialState());
 
-// final userData = getIt<UserData>(); 
+// final userData = getIt<UserData>();
   AuthServices authServices = getIt<AuthServices>();
   userUILogic(String input) {
     // emit(LoginLoadingSTATE());
@@ -35,11 +36,11 @@ class LoginCubit extends Cubit<LoginState> {
   _userTapLogin(String username) async {
     await Future.delayed(const Duration(seconds: 2));
     emit(LoginLoadingSTATE());
-    // please help me fix the logic
     try {
       userModel = await authServices.createGuestUser(username);
+      debugPrint("===> ${userModel!.userUID!} this is my ui");
       emit(LoginAccceptedState(
-        user_uid: userModel!.userUID!,
+        userUid: userModel!.userUID!,
         username: userModel!.username!,
       ));
     } catch (e) {

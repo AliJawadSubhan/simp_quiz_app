@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,8 +7,6 @@ import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_state.dart';
-// import 'package:simp_quiz_app/quiz_cubit.dart';
-
 class QuizScreen extends StatefulWidget {
   const QuizScreen(
       {super.key, required this.thisRoom, required this.currentUser});
@@ -44,17 +41,13 @@ class _QuizScreenState extends State<QuizScreen> {
   // Quizmraom quizBrain = Quizmraom();
 
   QuizCubit quizCubit = QuizCubit();
-  @override
-  void initState() {
-    super.initState();
-
-    quizCubit.updateMultiplayerRoom(widget.thisRoom, widget.currentUser);
-
-    // log("This will be build once?i---"); /
-  }
 
   @override
   Widget build(BuildContext context) {
+    quizCubit.updateMultiplayerRoom(widget.thisRoom, widget.currentUser);
+    // quizCubit.pleaelog();
+    // setState(() {});
+
     // myQuizModel();
     // final TextEditingController nameController = TextEditingController();
     // // ---------                     -------                    --------------
@@ -87,7 +80,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                       Text(
                         "You: ${quizCubit.you?.username}",
-                        style: const TextStyle(color: Colors.red),
+                        style: const TextStyle(color: Colors.green),
                       ),
                       Text(
                         state.quizBrain
@@ -117,6 +110,14 @@ class _QuizScreenState extends State<QuizScreen> {
                                 //   state.quizBrain.toNextQuestion();
                                 // });
                                 quizCubit.pickedOption();
+                                quizCubit.updateUserResults(
+                                  questionIndex: index,
+                                  tappedAnswer: state.quizBrain
+                                      .quizOptions(state.quizQuestions)[index]
+                                      .toString(),
+                                  user1: widget.thisRoom.user1,
+                                  user2: widget.thisRoom.user2,
+                                );
                               },
                               child: Text(
                                 // ignore: prefer_interpolation_to_compose_strings
@@ -129,6 +130,10 @@ class _QuizScreenState extends State<QuizScreen> {
                           },
                         ),
                       ),
+                     Text("Your correct answers ${quizCubit.me!.correctAnswer}"),
+                     Text("Your wrong answers ${quizCubit.me!.incorrectAnswer}"),
+                     Text("Your opponent correct answers ${quizCubit.participant!.correctAnswer}"),
+                     Text("Your opponent wrong answers ${quizCubit.participant!.incorrectAnswer}"),                   
                     ],
                   );
                 }

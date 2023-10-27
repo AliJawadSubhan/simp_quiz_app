@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class UserModel {
   final String? username;
   final String? userUID;
+  // final int? correctAnswer;
+  // final int? wrong
   UserModel({required this.username, required this.userUID});
   factory UserModel.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;

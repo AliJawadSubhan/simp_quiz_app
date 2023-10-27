@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:simp_quiz_app/model/quiz_question.dart';
 import 'package:simp_quiz_app/model/room_model.dart';
@@ -26,36 +27,28 @@ class FireStoreService {
       required String username1,
       required String username2}) async {
     final roomMultiplayerCollection = db.collection("multiplayerRoom");
+
+    // Sort the user IDs to maintain consistent ordering
+    List<String> sortedUserIds = [userId1, userId2]..sort();
+
     final existingRoomQuery = await roomMultiplayerCollection
-        .where('user1.user_uid', isEqualTo: userId1)
-        .where('user2.user_uid', isEqualTo: userId2)
+        .where('user1.user_uid', isEqualTo: sortedUserIds[0])
+        .where('user2.user_uid', isEqualTo: sortedUserIds[1])
         .get();
-    final secondExistingRoomQuery = await roomMultiplayerCollection
-        .where('user1.user_uid', isEqualTo: userId2)
-        .where('user2.user_uid', isEqualTo: userId1)
-        .get();
+
     if (existingRoomQuery.docs.isNotEmpty) {
-      // MultiplayerRoom room;
-      log("Don't do this");
       final snapshot = await roomMultiplayerCollection
-          .where('user1.user_uid', isEqualTo: userId1)
-          .where('user2.user_uid', isEqualTo: userId2)
-          .get();
-      return MultiplayerRoom.fromFirebase(snapshot.docs.first);
-      // return
-    } else if (secondExistingRoomQuery.docs.isNotEmpty) {
-      final snapshot = await roomMultiplayerCollection
-          .where('user1.user_uid', isEqualTo: userId2)
-          .where('user2.user_uid', isEqualTo: userId1)
+          .where('user1.user_uid', isEqualTo: sortedUserIds[0])
+          .where('user2.user_uid', isEqualTo: sortedUserIds[1])
           .get();
       return MultiplayerRoom.fromFirebase(snapshot.docs.first);
     } else {
       final roomID = roomMultiplayerCollection.doc().id;
 
       MultiplayerUser user1 =
-          MultiplayerUser(user_uid: userId1, username: username1);
+          MultiplayerUser(user_uid: sortedUserIds[0], username: username1);
       MultiplayerUser user2 =
-          MultiplayerUser(user_uid: userId2, username: username2);
+          MultiplayerUser(user_uid: sortedUserIds[1], username: username2);
 
       MultiplayerRoom multiplayerRoom =
           MultiplayerRoom(id: roomID, user1: user1, user2: user2);
@@ -70,6 +63,21 @@ class FireStoreService {
         rethrow;
       }
     }
+  }
+
+  // Future<Us
+
+  Future<MultiplayerRoom> updateUserResults(
+      MultiplayerUser user1, MultiplayerUser user2, String roomID) async {
+    final roomCollectionID = db.collection("multiplayerRoom").doc(roomID);
+
+    final room = MultiplayerRoom(id: roomID, user1: user1, user2: user2);
+
+    await roomCollectionID.update(room.toFirebase());
+
+    return room;
+
+    // roomCollection.doc(roomID).update(room.toFirebase());
   }
 
   Stream<List<QuizQuestionModel>> getQuizQuestions() {
@@ -110,24 +118,23 @@ class FireStoreService {
   }
 
   Future<UserModel?> getUserByID({required String userid}) async {
-  debugPrint("===> MyUserId $userid");
-  UserModel? userModel;
+    debugPrint("===> MyUserId $userid");
+    UserModel? userModel;
 
-  try {
-    final snapshot = await db.collection("users").doc(userid).get();
+    try {
+      final snapshot = await db.collection("users").doc(userid).get();
 
-    if (snapshot.exists) {
-      userModel = UserModel.fromSnapshot(snapshot);
-      debugPrint(userModel.username! + " username");
-      return userModel;
-    } else {
-      debugPrint("User not found");
+      if (snapshot.exists) {
+        userModel = UserModel.fromSnapshot(snapshot);
+        debugPrint("${userModel.username!} username");
+        return userModel;
+      } else {
+        debugPrint("User not found");
+        return null;
+      }
+    } catch (error) {
+      debugPrint("Error retrieving user: $error");
       return null;
     }
-  } catch (error) {
-    debugPrint("Error retrieving user: $error");
-    return null;
   }
-}
-
 }

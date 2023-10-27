@@ -17,7 +17,7 @@ List<QuizQuestionModel> questionsModel = [];
 class QuizCubit extends Cubit<QuizState> {
   QuizCubit() : super(QuizInitialState()) {
     drawQuizData();
-    pleaseLog();
+    // pleaseLog();
   }
 
   AuthServices authServices = getIt<AuthServices>();
@@ -26,6 +26,8 @@ class QuizCubit extends Cubit<QuizState> {
   MultiplayerUser? participant;
   pleaseLog() {
     log("me: ${me!.username}");
+
+    log("participant: ${participant!.username}");
   }
 
   UserModel? you;
@@ -36,9 +38,9 @@ class QuizCubit extends Cubit<QuizState> {
     you = youu;
     if (you!.userUID == room?.user1.user_uid && you != null) {
       me = room?.user1;
-      participant = room?.user2;
+      // participant = room?.user2;
     } else if (you!.userUID == room?.user2.user_uid && you != null) {
-      me = room?.user2;
+      // me = room?.user2;
       participant = room?.user1;
     }
     var user1Function = await fireStoreService.getUserByID(
@@ -56,27 +58,14 @@ class QuizCubit extends Cubit<QuizState> {
   String? id;
   // findWhichUserIsWhichUser() {}
   Quizmraom quizBrain = Quizmraom();
-  updateUserResults(
-      {required int questionIndex,
-      required String tappedAnswer,
-      required MultiplayerUser user1,
-      required MultiplayerUser user2}) {
-    if (user1.user_uid == you!.userUID) {
-      if (questionsModel[questionIndex].correctAnswer == tappedAnswer) {
-        user1.correctAnswer++;
-      } else if (questionsModel[questionIndex].correctAnswer != tappedAnswer) {
-        user1.incorrectAnswer++;
-      }
-    } else if (user2.user_uid == you!.userUID) {
-      if (questionsModel[questionIndex].correctAnswer == tappedAnswer) {
-        user2.correctAnswer++;
-      } else if (questionsModel[questionIndex].correctAnswer != tappedAnswer) {
-        user2.incorrectAnswer++;
+
+    userTappedmE(int thisQuestionINdex, String tappedAnswer) {
+      if (questionsModel[thisQuestionINdex].correctAnswer == tappedAnswer) {
+        me?.correctAnswer += 1;
+      } else {
+        me?.incorrectAnswer += 1;
       }
     }
-    fireStoreService.updateUserResults(user1, user2, room!.id);
-  }
-
   drawQuizData() async {
     getQuizList();
 
@@ -99,7 +88,14 @@ class QuizCubit extends Cubit<QuizState> {
     // }
   }
 
-  void pickedOption() {
+  void pickedOption(thisQuestionINdex, String tappedAnswer) {
+    // serTappedmE(int thisQuestionINdex, String tappedAnswer) {
+      if (questionsModel[thisQuestionINdex].correctAnswer == tappedAnswer) {
+        me?.correctAnswer += 1;
+      } else {
+        me?.incorrectAnswer += 1;
+      }
+    // }
     quizBrain.toNextQuestion();
     if (quizBrain.isLastQuestion(questionsModel)) {
       // quizBrain.reset();

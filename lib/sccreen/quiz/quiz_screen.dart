@@ -7,6 +7,7 @@ import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_state.dart';
+
 class QuizScreen extends StatefulWidget {
   const QuizScreen(
       {super.key, required this.thisRoom, required this.currentUser});
@@ -45,7 +46,7 @@ class _QuizScreenState extends State<QuizScreen> {
   @override
   Widget build(BuildContext context) {
     quizCubit.updateMultiplayerRoom(widget.thisRoom, widget.currentUser);
-    // quizCubit.pleaelog();
+    quizCubit.pleaseLog();
     // setState(() {});
 
     // myQuizModel();
@@ -80,7 +81,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       ),
                       Text(
                         "You: ${quizCubit.you?.username}",
-                        style: const TextStyle(color: Colors.green),
+                        style: const TextStyle(color: Colors.pink),
                       ),
                       Text(
                         state.quizBrain
@@ -109,15 +110,11 @@ class _QuizScreenState extends State<QuizScreen> {
                                 // setState(() {
                                 //   state.quizBrain.toNextQuestion();
                                 // });
-                                quizCubit.pickedOption();
-                                quizCubit.updateUserResults(
-                                  questionIndex: index,
-                                  tappedAnswer: state.quizBrain
-                                      .quizOptions(state.quizQuestions)[index]
-                                      .toString(),
-                                  user1: widget.thisRoom.user1,
-                                  user2: widget.thisRoom.user2,
-                                );
+                                quizCubit.pickedOption(
+                                    index,
+                                   state.quizBrain
+                                    .quizOptions(state.quizQuestions)[index]);
+                                //  quizCubit.userTappedmE(index, state.quizQuestions[index].options[index],);
                               },
                               child: Text(
                                 // ignore: prefer_interpolation_to_compose_strings
@@ -130,10 +127,14 @@ class _QuizScreenState extends State<QuizScreen> {
                           },
                         ),
                       ),
-                     Text("Your correct answers ${quizCubit.me!.correctAnswer}"),
-                     Text("Your wrong answers ${quizCubit.me!.incorrectAnswer}"),
-                     Text("Your opponent correct answers ${quizCubit.participant!.correctAnswer}"),
-                     Text("Your opponent wrong answers ${quizCubit.participant!.incorrectAnswer}"),                   
+                      Text(
+                          "Your correct answers ${quizCubit.me!.correctAnswer}"),
+                      Text(
+                          "Your wrong answers ${quizCubit.me!.incorrectAnswer}"),
+                      Text(
+                          "Your opponent correct answers ${quizCubit.participant!.correctAnswer}"),
+                      Text(
+                          "Your opponent wrong answers ${quizCubit.participant!.incorrectAnswer}"),
                     ],
                   );
                 }

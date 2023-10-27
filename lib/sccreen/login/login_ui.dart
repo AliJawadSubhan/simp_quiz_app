@@ -4,6 +4,8 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:simp_quiz_app/injection.dart';
+import 'package:simp_quiz_app/internet_cubit.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/login/login_cubit.dart';
 import 'package:simp_quiz_app/sccreen/login/login_state.dart';
@@ -15,6 +17,9 @@ class LoginUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+        log("message s");
+
+    log("message ${getIt<InternetCubit>().username}");
     LoginCubit loginCubit = LoginCubit();
     return Scaffold(
       backgroundColor: Colors.teal.shade400, // Exotic background color
@@ -60,7 +65,7 @@ class LoginUI extends StatelessWidget {
               }
               if (state is LoginAccceptedState) {
                 UserModel userModel =
-                    UserModel(username: state.username, userUID: state.userUid);
+                    UserModel(username: state.username, userUID: state.userUid, correctAnswer: 0, wrong: 0);
                 Navigator.push(context, MaterialPageRoute(
                   builder: (_) {
                     return BlocProvider.value(

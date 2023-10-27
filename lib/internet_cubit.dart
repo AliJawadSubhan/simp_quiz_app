@@ -16,6 +16,7 @@ class InternetCubit extends Cubit<InternetState> {
       }
     });
   }
+  final username = "Ali jawad subhan";
 }
 
 enum InternetState { init, gain, error }

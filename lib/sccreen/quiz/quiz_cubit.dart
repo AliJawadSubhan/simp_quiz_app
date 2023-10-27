@@ -24,11 +24,11 @@ class QuizCubit extends Cubit<QuizState> {
   MultiplayerRoom? room;
   MultiplayerUser? me;
   MultiplayerUser? participant;
-  pleaseLog() {
-    log("me: ${me!.username}");
+  // pleaseLog() {
+  //   log("me: ${me!.username}");
 
-    log("participant: ${participant!.username}");
-  }
+  //   log("participant: ${participant!.username}");
+  // }
 
   UserModel? you;
   UserModel? yourOpponent;
@@ -59,13 +59,14 @@ class QuizCubit extends Cubit<QuizState> {
   // findWhichUserIsWhichUser() {}
   Quizmraom quizBrain = Quizmraom();
 
-    userTappedmE(int thisQuestionINdex, String tappedAnswer) {
-      if (questionsModel[thisQuestionINdex].correctAnswer == tappedAnswer) {
-        me?.correctAnswer += 1;
-      } else {
-        me?.incorrectAnswer += 1;
-      }
+  userTappedmE(int thisQuestionINdex, String tappedAnswer) {
+    if (questionsModel[thisQuestionINdex].correctAnswer == tappedAnswer) {
+      me?.correctAnswer += 1;
+    } else {
+      me?.incorrectAnswer += 1;
     }
+  }
+
   drawQuizData() async {
     getQuizList();
 
@@ -76,6 +77,8 @@ class QuizCubit extends Cubit<QuizState> {
     emit(QuizDataState(
       quizQuestions: questionsModel,
       quizBrain: quizBrain,
+      you: you!,
+      opponent: yourOpponent!,
     ));
   }
 
@@ -88,20 +91,45 @@ class QuizCubit extends Cubit<QuizState> {
     // }
   }
 
-  void pickedOption(thisQuestionINdex, String tappedAnswer) {
-    // serTappedmE(int thisQuestionINdex, String tappedAnswer) {
-      if (questionsModel[thisQuestionINdex].correctAnswer == tappedAnswer) {
-        me?.correctAnswer += 1;
+  void pickedOption(thisQuestionINdex, String tappedAnswer) async {
+    final answer = quizBrain.checkAnswer(questionsModel, tappedAnswer);
+    if (you != null) {
+      if (answer == false) {
+        you!.wrong = (you!.wrong ?? 0) + 1;
+        log("false");
+      } else if (answer == true) {
+        you!.correctAnswer = (you!.correctAnswer ?? 0) + 1;
+        log("true");
       } else {
-        me?.incorrectAnswer += 1;
+        log("don't know");
       }
-    // }
+    }
+    UserModel? user1func;
+
+    UserModel? user2func;
+    if (you?.userUID == room?.user1.user_uid) {
+      fireStoreService
+          .getUserByID(userid: room!.user1.user_uid)
+          .then((value) => user1func = value!);
+    } else if (you?.userUID == room?.user2.user_uid) {
+      fireStoreService
+          .getUserByID(userid: room!.user2.user_uid)
+          .then((value) => user2func = value!);
+    }
+    emit(QuizScoreUpdateState(user1: you!, user2: yourOpponent!));
+    // if (condition) {
+    fireStoreService.updateUser(you!);
     quizBrain.toNextQuestion();
     if (quizBrain.isLastQuestion(questionsModel)) {
       // quizBrain.reset();
       emit(QuizQuizCompletedState());
     } else {
-      emit(QuizDataState(quizBrain: quizBrain, quizQuestions: questionsModel));
+      emit(QuizDataState(
+        quizBrain: quizBrain,
+        quizQuestions: questionsModel,
+        you: you!,
+        opponent: yourOpponent!,
+      ));
     }
   }
 }

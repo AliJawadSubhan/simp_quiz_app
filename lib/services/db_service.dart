@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:simp_quiz_app/model/quiz_question.dart';
 import 'package:simp_quiz_app/model/room_model.dart';
@@ -15,6 +14,8 @@ class FireStoreService {
       return await db.collection('users').doc(id).set({
         'username': username.trim(),
         "user_id": id,
+        "correct": 0,
+        "wrong": 0,
       });
     } catch (e) {
       log('firestore: ${e.toString()}');
@@ -78,6 +79,24 @@ class FireStoreService {
     return room;
 
     // roomCollection.doc(roomID).update(room.toFirebase());
+  }
+
+  bool updateUser(UserModel user) {
+    final userDOCRED = db.collection("users").doc(user.userUID);
+    try {
+      final userModel = UserModel(
+          username: user.username,
+          userUID: user.userUID,
+          correctAnswer: user.correctAnswer,
+          wrong: user.wrong);
+      userDOCRED.update(
+        userModel.toFirebase(),
+      );
+      return true;
+    } catch (e) {
+      return false;
+    }
+    // return false;
   }
 
   Stream<List<QuizQuestionModel>> getQuizQuestions() {

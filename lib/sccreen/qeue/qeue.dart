@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:simp_quiz_app/injection.dart';
+import 'package:simp_quiz_app/internet_cubit.dart';
 import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/login/login_ui.dart';
@@ -68,7 +70,7 @@ class _QueueScreenState extends State<QueueScreen> {
     if (listOfUsersWithoutThecurrentOne.isEmpty) {
       await Future.delayed(
           const Duration(
-            seconds: 2,
+            seconds: 3,
           ), () {
         return pickRandomOpponent();
       });
@@ -89,6 +91,7 @@ class _QueueScreenState extends State<QueueScreen> {
   Widget build(BuildContext context) {
     log("length ${listOfUsersWithoutThecurrentOne.length}");
 
+    log("message ${getIt<InternetCubit>().username}");
     return Scaffold(
       body: Center(
         child: GestureDetector(

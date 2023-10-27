@@ -47,6 +47,6 @@ class AuthServices {
 
     // userData.updateUserModel(UserModel(username: username, userUID: userUid));
 
-    return UserModel(username: username, userUID: userUid, );
+    return UserModel(username: username, userUID: userUid, correctAnswer: 0, wrong: 0);
   }
 }

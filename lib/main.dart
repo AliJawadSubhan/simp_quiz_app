@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:simp_quiz_app/firebase_options.dart';
 import 'package:simp_quiz_app/injection.dart';
+import 'package:simp_quiz_app/internet_cubit.dart';
 import 'package:simp_quiz_app/sccreen/login/login_cubit.dart';
 import 'package:simp_quiz_app/sccreen/login/login_ui.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
@@ -20,6 +22,9 @@ void main() async {
     ),
     BlocProvider(
       create: (context) => LoginCubit(),
+    ),
+    BlocProvider(
+      create: (context) => InternetCubit(),
     )
   ], child: const MyApp()));
 }

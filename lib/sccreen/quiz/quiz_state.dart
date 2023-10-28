@@ -13,11 +13,11 @@ class QuizActionState extends QuizState {}
 class QuizDataState extends QuizState {
   final Quizmraom quizBrain;
   final List<QuizQuestionModel> quizQuestions;
-  final UserModel you;
-  final UserModel opponent;
+  // final UserModel you;
+  // final UserModel opponent;
 
 
-  QuizDataState( {required this.quizQuestions, required this.quizBrain, required this.you, required this.opponent,});
+  QuizDataState( {required this.quizQuestions, required this.quizBrain, });
 }
 
 class QuizLoadingDemoState extends QuizState {}

@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MultiplayerRoom {
   final String id;
-  final MultiplayerUser user1;
-  final MultiplayerUser user2;
+   MultiplayerUser user1;
+   MultiplayerUser user2;
 
   MultiplayerRoom({
     required this.id,

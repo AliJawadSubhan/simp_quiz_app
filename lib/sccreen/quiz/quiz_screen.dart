@@ -52,26 +52,22 @@ class _QuizScreenState extends State<QuizScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              BlocBuilder<QuizCubit, QuizState>(
-                bloc: quizCubit,
-                buildWhen: (previous, current) => current is! QuizActionState,
-                builder: (context, state) {
-                  if (state is QuizScoreUpdateState) {
-                    return Column(
-                      children: [
-                        Text('${state.user1.correctAnswer.toString() ?? 0}'),
-                        Text('${state.user1.wrong.toString() ?? 0}'),
-                        Text('${state.user2.correctAnswer.toString() ?? 0}'),
-                        Text('${state.user2.wrong.toString() ?? 0}'),
-                      ],
-                    );
-                  }
-                  return Text("123");
-                },
-              ),
               BlocConsumer<QuizCubit, QuizState>(
-                  listener: (context, state) {},
+                  listener: (context, state) {
+                    if (state is QuizQuizCompletedState) {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Scaffold(
+                              body: Center(
+                                child: Text("Hello World,"),
+                              ),
+                            ),
+                          ));
+                    }
+                  },
                   buildWhen: (previous, current) => current is! QuizActionState,
                   listenWhen: (previous, current) => current is QuizActionState,
                   bloc: quizCubit,
@@ -81,9 +77,7 @@ class _QuizScreenState extends State<QuizScreen> {
                         animating: true,
                       );
                     }
-                    // if (state is Login) {
 
-                    // }
                     if (state is QuizDataState) {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -125,6 +119,10 @@ class _QuizScreenState extends State<QuizScreen> {
                                     // });
                                     // log();
                                     // quizCubit.quizBrain.quizAnswer(state.quizQuestions);
+                                    // quizCubit.userTappedmE(
+                                    //     index,
+                                    //     state.quizBrain.quizOptions(
+                                            // state.quizQuestions)[index]);
                                     quizCubit.pickedOption(
                                         index,
                                         state.quizBrain.quizOptions(
@@ -142,28 +140,97 @@ class _QuizScreenState extends State<QuizScreen> {
                               },
                             ),
                           ),
+
+                          Row(
+                            children: [
+                              // Your Score
+                              StreamBuilder(
+                                stream: quizCubit.showUserScoreStream(
+                                    quizCubit.you!.userUID!),
+                                builder: (context, snapshot) {
+                                  final isLoading = snapshot.connectionState ==
+                                      ConnectionState.waiting;
+                                  final hasData = snapshot.hasData;
+
+                                  return Column(
+                                    children: [
+                                 const    Text("Your Score"),
+                                      isLoading
+                                          ? const CircularProgressIndicator() // Show a loading indicator
+                                          : hasData
+                                              ? Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                    children: [
+                                                      Text(
+                                                          " Correct : ${snapshot.data!.correctAnswer}"),
+                                                      Text(
+                                                          " Wrong : ${snapshot.data!.wrong}"),
+                                                    ],
+                                                  ),
+                                              )
+                                              : const Text("No Data Available"),
+                                    ],
+                                  );
+                                },
+                              ),
+
+                              // Opponent's Score
+                              StreamBuilder(
+                                stream: quizCubit.showUserScoreStream(
+                                    quizCubit.yourOpponent!.userUID!),
+                                builder: (context, snapshot) {
+                                  final isLoading = snapshot.connectionState ==
+                                      ConnectionState.waiting;
+                                  final hasData = snapshot.hasData;
+
+                                  return Column(
+                                    children: [
+                                      const Text("Opponent's Score"),
+                                      isLoading
+                                          ?   const CircularProgressIndicator() // Show a loading indicator
+                                          : hasData
+                                              ? Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                    children: [
+                                                      Text(
+                                                          " Correct : ${snapshot.data!.correctAnswer}"),
+                                                      Text(
+                                                          " Wrong : ${snapshot.data!.wrong}"),
+                                                    ],
+                                                  ),
+                                              )
+                                              : const Text("No Data Available"),
+                                    ],
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+
                           // Text(
-                          //     "Your correct answers ${quizCubit.me!.correctAnswer}"),
+                          //     "Your correct answers ${quizCubit.me?.correctAnswer ?? "sad"}"),
                           // Text(
-                          //     "Your wrong answers ${quizCubit.me!.incorrectAnswer}"),
+                          //     "Your wrong answers ${quizCubit.me?.incorrectAnswer ?? "sad"}"),
+                          // // Text(
+                          //     "Your opponent correct answers ${quizCubit.participant?.correctAnswer ?? "sad"}"),
                           // Text(
-                          //     "Your opponent correct answers ${quizCubit.participant!.correctAnswer}"),
-                          // Text(
-                          // "Your opponent wrong answers ${quiz}"),
+                          // "Your opponent wrong answers ${quizCubit.participant?.correctAnswer ?? "sad"}"),
                           //  if (state is QuizScoreUpdateState)
-                          Text(state.you.correctAnswer == null
-                              ? "sad"
-                              : state.you.correctAnswer.toString()),
-                          Text(state.you.wrong == null
-                              ? "no sad"
-                              : state.you.wrong.toString()),
-                          // =---
-                          Text(state.opponent.correctAnswer == null
-                              ? "sad"
-                              : state.opponent.correctAnswer.toString()),
-                          Text(state.opponent.wrong == null
-                              ? "no sad"
-                              : state.opponent.wrong.toString()),
+                          // Text(quizCubit.you?.correctAnswer == null
+                          //     ? "sad"
+                          //     : "${quizCubit.you!.correctAnswer.toString()} Your Correct Answer"),
+                          // Text(quizCubit.you?.wrong == null
+                          //     ? "no sad"
+                          //     : "${quizCubit.you!.wrong.toString()} Your Wrong answer"),
+                          // // =---
+                          // Text(quizCubit.yourOpponent?.correctAnswer == null
+                          //     ? "sad"
+                          //     : "${quizCubit.yourOpponent!.correctAnswer.toString()} Opponent corect answer"),
+                          // Text(quizCubit.yourOpponent?.wrong == null
+                          //     ? "no sad"
+                          //     : "${quizCubit.yourOpponent!.wrong.toString()} Opponent Wrong answer "),
                         ],
                       );
                     }

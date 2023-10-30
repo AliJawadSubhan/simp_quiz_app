@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:simp_quiz_app/model/quiz_question.dart';
 import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
@@ -55,6 +53,7 @@ class _QuizScreenState extends State<QuizScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               BlocConsumer<QuizCubit, QuizState>(
+                
                   listener: (context, state) {
                     if (state is QuizQuizCompletedState) {
                       Navigator.push(
@@ -99,9 +98,9 @@ class _QuizScreenState extends State<QuizScreen> {
                               fontSize: 24.0, // Text size
                             ),
                           ),
-                          const SizedBox(height: 20.0),
+                          // const SizedBox(height: 20.0),
                           SizedBox(
-                            height: 120,
+                            height: 150,
                             width: 241,
                             child: ListView.builder(
                               itemCount: state
@@ -119,10 +118,10 @@ class _QuizScreenState extends State<QuizScreen> {
                                     // });
                                     // log();
                                     // quizCubit.quizBrain.quizAnswer(state.quizQuestions);
-                                    quizCubit.userTappedmE(
-                                        index,
-                                        state.quizBrain.quizOptions(
-                                            state.quizQuestions)[index]);
+                                    // quizCubit.userTappedmE(
+                                    //     index,
+                                    //     state.quizBrain.quizOptions(
+                                    //         state.quizQuestions)[index]);
                                     quizCubit.pickedOption(
                                         index,
                                         state.quizBrain.quizOptions(
@@ -246,45 +245,3 @@ class _QuizScreenState extends State<QuizScreen> {
   }
 }
 
-class Quizmraom {
-  int questionNumber = 0;
-  toNextQuestion() {
-    questionNumber++;
-    // return questionNumber;
-  }
-
-  bool isLastQuestion(List<QuizQuestionModel> q) {
-    return questionNumber == (q.length + 1);
-  }
-  // final List<QuizQuestionModel> quizQuestions;
-  // Quizmraom({
-  //   required this.quizQuestions,
-  // });
-  // bool isLastQuestion() {
-  //   // return questionNumber > this.questionNumber.length - 1;
-  // }
-
-  reset() {
-    questionNumber = 0;
-  }
-
-  bool checkAnswer(List<QuizQuestionModel> quizQuestions, String pickedOption) {
-    if (quizQuestions[questionNumber].correctAnswer == pickedOption) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  String quizQuestion(List<QuizQuestionModel> quizQuestions) {
-    return quizQuestions[questionNumber].question;
-  }
-
-  List quizOptions(List<QuizQuestionModel> quizQuestions) {
-    return quizQuestions[questionNumber].options;
-  }
-
-  String quizAnswer(List<QuizQuestionModel> quizQuestions) {
-    return quizQuestions[questionNumber].correctAnswer;
-  }
-}

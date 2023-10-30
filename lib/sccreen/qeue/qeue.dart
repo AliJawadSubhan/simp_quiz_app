@@ -31,14 +31,19 @@ class _QueueScreenState extends State<QueueScreen> {
     // log("Your Username: ${widget.userModel.username}");
     // log(" Your User id: ${widget.userModel.userUID}");
     await listofUsersWithoutID();
-    await pickRandomOpponent();
-    UserModel opponent = await pickRandomOpponent();
+    // await pickRandomOpponent();
+    UserModel opponent = await pickRandomOpponent().catchError((onError) {
+      log("this is your opponent error: $onError");
+    });
+    log("this is your opponent: ${opponent.username}");
     MultiplayerRoom room = await dbService.createARoom(
       userId1: widget.userModel.userUID.toString(),
       userId2: opponent.userUID.toString(),
       username1: widget.userModel.username.toString(),
       username2: opponent.username.toString(),
     );
+
+    log("this is your room: ${room.id}");
 
     final user = UserModel(
       username: widget.userModel.username,
@@ -92,21 +97,14 @@ class _QueueScreenState extends State<QueueScreen> {
         .toList();
 
     if (availableOpponents.isEmpty) {
-      await Future.delayed(
-        const Duration(seconds: 3),
-        () {
-          return pickRandomOpponent();
-        },
-      );
+      await Future.delayed(const Duration(seconds: 3));
+      return pickRandomOpponent(); 
+    } else {
+      var random = math.Random();
+      int randomIndex = random.nextInt(availableOpponents.length);
+      log("This is your opponent: ${availableOpponents[randomIndex].username}");
+      return availableOpponents[randomIndex];
     }
-    // if (condition) {
-
-    // }
-
-    var random = math.Random();
-    int randomIndex = random.nextInt(availableOpponents.length);
-    log("I think this is your opponent: ${availableOpponents[randomIndex].username!}");
-    return availableOpponents[randomIndex];
   }
 
   FireStoreService dbService = FireStoreService();
@@ -117,6 +115,8 @@ class _QueueScreenState extends State<QueueScreen> {
   Widget build(BuildContext context) {
     // initialize();
     log("length ${listOfUsersWithoutThecurrentOne.length}");
+    // log(message)
+    // pickRandomOpponent();
     // oppone
     log("message ${getIt<InternetCubit>().username}");
 

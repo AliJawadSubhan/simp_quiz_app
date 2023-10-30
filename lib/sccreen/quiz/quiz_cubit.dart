@@ -4,10 +4,10 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:simp_quiz_app/injection.dart';
+import 'package:simp_quiz_app/model/quiz_logic.dart';
 import 'package:simp_quiz_app/model/quiz_question.dart';
 import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
-import 'package:simp_quiz_app/sccreen/quiz/quiz_screen.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_state.dart';
 import 'package:simp_quiz_app/services/auth_serivces.dart';
 import 'package:simp_quiz_app/services/db_service.dart';
@@ -71,7 +71,7 @@ class QuizCubit extends Cubit<QuizState> {
   FireStoreService fireStoreService = FireStoreService();
   String? id;
   // findWhichUserIsWhichUser() {}
-  Quizmraom quizBrain = Quizmraom();
+  QuizBrainLogic quizBrain = QuizBrainLogic();
   // userTappedmE(int thisQuestionINdex, String tappedAnswer) {
   //   final answer = quizBrain.checkAnswer(questionsModel, tappedAnswer);
 
@@ -114,14 +114,14 @@ class QuizCubit extends Cubit<QuizState> {
         tempUser1 = me;
         // tempUser2 = room?.user1;
       }
-      if (tempUser1 != null ) {
+      if (tempUser1 != null) {
         if (answer) {
           tempUser1.correctAnswer = (tempUser1.correctAnswer ?? 0) + 1;
         } else {
           tempUser1.incorrectAnswer = (tempUser1.incorrectAnswer ?? 0) + 1;
         }
         // log("my Score: Correct ${tempUser1.correctAnswer}, Wrong ${tempUser1.incorrectAnswer}");
-  
+
         log("${tempUser1.username} temp1Username");
 
         fireStoreService.updateUserResults(tempUser1, room!.id);
@@ -151,33 +151,24 @@ class QuizCubit extends Cubit<QuizState> {
     if (you != null) {
       if (answer == false) {
         you!.wrong = (you!.wrong ?? 0) + 1;
+
+        me!.incorrectAnswer = (me!.incorrectAnswer ?? 0) + 1;
         log("false");
       } else if (answer == true) {
         you!.correctAnswer = (you!.correctAnswer ?? 0) + 1;
+          me!.correctAnswer = (me!.correctAnswer ?? 0) + 1;
         log("true");
       } else {
         log("don't know");
       }
+      fireStoreService.updateUserResults(me!, room!.id);
     }
     fireStoreService.updateUser(you!);
-    // UserModel? user1func;
 
-    // UserModel? user2func;
-    // if (you?.userUID == room?.user1.user_uid) {
-    //   fireStoreService
-    //       .getUserByID(userid: room!.user1.user_uid)
-    //       .then((value) => user1func = value!);
-    // } else if (you?.userUID == room?.user2.user_uid) {
-    //   fireStoreService
-    //       .getUserByID(userid: room!.user2.user_uid)
-    //       .then((value) => user2func = value!);
-    // }
-    emit(QuizScoreUpdateState(user1: you!, user2: yourOpponent!));
     // if (condition) {
     fireStoreService.updateUser(you!);
     quizBrain.toNextQuestion();
     if (quizBrain.isLastQuestion(questionsModel)) {
-      // quizBrain.reset();
       emit(QuizQuizCompletedState());
     } else {
       emit(QuizDataState(

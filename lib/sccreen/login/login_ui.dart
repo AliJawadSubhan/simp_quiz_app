@@ -1,7 +1,5 @@
-// ignore_for_file: must_be_immutable
-
 import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:simp_quiz_app/injection.dart';
@@ -17,14 +15,21 @@ class LoginUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-        log("message s");
-
-    log("message ${getIt<InternetCubit>().username}");
     LoginCubit loginCubit = LoginCubit();
     return Scaffold(
-      backgroundColor: Colors.teal.shade400, // Exotic background color
-      body: Center(
-        child: BlocConsumer<LoginCubit, LoginState>(
+      backgroundColor: Colors.teal.shade400,
+      body: Container(
+        height: double.infinity,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.teal.shade200, Colors.teal.shade900],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: BlocConsumer<LoginCubit, LoginState>(
             bloc: loginCubit,
             buildWhen: (previous, current) => current is! LoginActionState,
             listenWhen: (previous, current) => current is LoginActionState,
@@ -43,9 +48,10 @@ class LoginUI extends StatelessWidget {
                           child: Text(
                             state.softError,
                             style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16.0,
-                                fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 16.0,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
@@ -56,7 +62,6 @@ class LoginUI extends StatelessWidget {
                       label: 'Close',
                       textColor: Colors.white,
                       onPressed: () {
-                        // Add any action you want here
                         ScaffoldMessenger.of(context).hideCurrentSnackBar();
                       },
                     ),
@@ -64,8 +69,12 @@ class LoginUI extends StatelessWidget {
                 );
               }
               if (state is LoginAccceptedState) {
-                UserModel userModel =
-                    UserModel(username: state.username, userUID: state.userUid, correctAnswer: 0, wrong: 0);
+                UserModel userModel = UserModel(
+                  username: state.username,
+                  userUID: state.userUid,
+                  correctAnswer: 0,
+                  wrong: 0,
+                );
                 Navigator.push(context, MaterialPageRoute(
                   builder: (_) {
                     return BlocProvider.value(
@@ -81,99 +90,94 @@ class LoginUI extends StatelessWidget {
             builder: (context, state) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
-                  const Text(
+                  Text(
                     "Quiz Multiplayer",
                     style: TextStyle(
+                      fontSize: 28.0,
                       color: Colors.white,
-                      fontSize: 21,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Container(
-                      padding: const EdgeInsets.all(20.0),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(
-                            0.8), // Semi-transparent white background
-                        borderRadius: BorderRadius.circular(20.0),
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Text(
-                            "Login",
-                            style: TextStyle(
-                              fontSize: 28.0,
-                              color: Colors.teal.shade900, // Exotic text color
-                              fontWeight: FontWeight.bold,
+                  SizedBox(height: 20.0),
+                  Container(
+                    padding: EdgeInsets.all(20.0),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(
+                          0.9), // Slightly transparent white background
+                      borderRadius: BorderRadius.circular(20.0),
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          "Login",
+                          style: TextStyle(
+                            fontSize: 28.0,
+                            color: Colors.teal.shade900,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 20.0),
+                        TextFormField(
+                          controller: nameController,
+                          decoration: InputDecoration(
+                            hintText: "Your Name",
+                            labelText: "Name",
+                            labelStyle: TextStyle(
+                              color: Colors.teal.shade900,
+                            ),
+                            prefixIcon: Icon(
+                              Icons.person,
+                              color: Colors.teal.shade900,
+                            ),
+                            fillColor: Colors.white,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: Colors.teal.shade900),
+                              borderRadius: BorderRadius.circular(10.0),
                             ),
                           ),
-                          const SizedBox(height: 20.0),
-                          TextFormField(
-                            controller: nameController,
-                            decoration: InputDecoration(
-                              hintText: "Your Name",
-                              labelText: "Name",
-                              labelStyle: TextStyle(
-                                color: Colors
-                                    .teal.shade900, // Exotic label text color
-                              ),
-                              prefixIcon: Icon(
-                                Icons.person,
-                                color:
-                                    Colors.teal.shade900, // Exotic icon color
-                              ),
-                              fillColor:
-                                  Colors.white, // Input field background color
-                              filled: true,
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                    color:
-                                        Colors.teal.shade900), // Border color
-                              ),
-                            ),
-                            style: TextStyle(
-                              color: Colors.teal
-                                  .shade900, // Exotic text color in input field
+                          style: TextStyle(
+                            color: Colors.teal.shade900,
+                          ),
+                        ),
+                        SizedBox(height: 20.0),
+                        ElevatedButton(
+                          onPressed: () {
+                            log(nameController.text.trim());
+                            loginCubit.userUILogic(nameController.text.trim());
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.teal.shade900,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
                             ),
                           ),
-                          const SizedBox(height: 20.0),
-                          ElevatedButton(
-                            onPressed: () {
-                              // Add your login logic here
-                              // myQuizModel();
-                              log(nameController.text.trim());
-                              loginCubit
-                                  .userUILogic(nameController.text.trim());
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.teal
-                                  .shade900, // Exotic button background color
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
-                              ),
-                            ),
-                            child: state is LoginLoadingSTATE
-                                ? const CircularProgressIndicator(
-                                    color: Colors.teal,
-                                  )
-                                : const Text(
-                                    "Let's play (:",
-                                    style: TextStyle(
-                                      color: Colors
-                                          .white, // Text color on the button
-                                    ),
+                          child: state is LoginLoadingSTATE
+                              ? SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
                                   ),
-                          ),
-                        ],
-                      ),
+                                )
+                              : Text(
+                                  "Let's Play",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               );
-            }),
+            },
+          ),
+        ),
       ),
     );
   }

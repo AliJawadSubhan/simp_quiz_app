@@ -1,8 +1,9 @@
 
 // import 'package:simp_quiz_app/main.dart';
+import 'package:simp_quiz_app/model/quiz_logic.dart';
 import 'package:simp_quiz_app/model/quiz_question.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
-import 'package:simp_quiz_app/sccreen/quiz/quiz_screen.dart';
+// import 'package:simp_quiz_app/sccreen/quiz/quiz_screen.dart';
 
 class QuizState {}
 
@@ -11,7 +12,7 @@ class QuizQuizCompletedState extends QuizActionState {}
 class QuizActionState extends QuizState {}
 
 class QuizDataState extends QuizState {
-  final Quizmraom quizBrain;
+  final QuizBrainLogic quizBrain;
   final List<QuizQuestionModel> quizQuestions;
   // final UserModel you;
   // final UserModel opponent;
@@ -27,7 +28,7 @@ class QuizPickedOptionState extends QuizActionState {
 
   // QuizPickedOptionState();
   
-    final Quizmraom  quizBrain;
+    final QuizBrainLogic  quizBrain;
 
   QuizPickedOptionState({required this.quizBrain});
 

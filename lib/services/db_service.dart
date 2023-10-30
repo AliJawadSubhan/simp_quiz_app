@@ -41,18 +41,18 @@ class FireStoreService {
     if (existingRoomQuery.docs.isNotEmpty) {
       // // MultiplayerRoom room;
       // log("Don't do this");
-      // final snapshot = await roomMultiplayerCollection
-      //     .where('user1.user_uid', isEqualTo: userId1)
-      //     .where('user2.user_uid', isEqualTo: userId2)
-      //     .get();
-      return MultiplayerRoom.fromFirebase(existingRoomQuery.docs.first);
+      final snapshot = await roomMultiplayerCollection
+          .where('user1.user_uid', isEqualTo: userId1)
+          .where('user2.user_uid', isEqualTo: userId2)
+          .get();
+      return MultiplayerRoom.fromFirebase(snapshot.docs.first);
       // return
     } else if (secondExistingRoomQuery.docs.isNotEmpty) {
-      // final snapshot = await roomMultiplayerCollection
-      //     .where('user1.user_uid', isEqualTo: userId2)
-      //     .where('user2.user_uid', isEqualTo: userId1)
-      //     .get();
-      return MultiplayerRoom.fromFirebase(secondExistingRoomQuery.docs.first);
+      final snapshot = await roomMultiplayerCollection
+          .where('user1.user_uid', isEqualTo: userId2)
+          .where('user2.user_uid', isEqualTo: userId1)
+          .get();
+      return MultiplayerRoom.fromFirebase(snapshot.docs.first);
     } else {
       final roomID = roomMultiplayerCollection.doc().id;
 
@@ -183,7 +183,7 @@ class FireStoreService {
 
     return userCollection.map((querySnapshots) {
       final userList = <UserModel>[];
-      log('querysnapshot.length: ${querySnapshots.docs.length}');
+      log('querysnapshot.length users: ${querySnapshots.docs.length}');
       for (var data in querySnapshots.docs) {
         UserModel userModel = UserModel.fromSnapshot(data);
         userList.add(userModel);

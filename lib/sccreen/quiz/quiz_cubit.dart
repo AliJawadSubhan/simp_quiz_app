@@ -1,7 +1,5 @@
 // import 'dart:async';
-
 import 'dart:developer';
-
 import 'package:bloc/bloc.dart';
 import 'package:simp_quiz_app/injection.dart';
 import 'package:simp_quiz_app/model/quiz_question.dart';
@@ -71,6 +69,7 @@ class QuizCubit extends Cubit<QuizState> {
   FireStoreService fireStoreService = FireStoreService();
   String? id;
   // findWhichUserIsWhichUser() {}
+<<<<<<< Updated upstream
   Quizmraom quizBrain = Quizmraom();
   // userTappedmE(int thisQuestionINdex, String tappedAnswer) {
   //   final answer = quizBrain.checkAnswer(questionsModel, tappedAnswer);
@@ -139,6 +138,10 @@ class QuizCubit extends Cubit<QuizState> {
     }
   }
 
+=======
+  QuizBrainLogic quizBrain = QuizBrainLogic();
+  
+>>>>>>> Stashed changes
   getQuizList() {
     // Future<void> myQuizModel() async {
     FireStoreService service = FireStoreService();
@@ -157,6 +160,10 @@ class QuizCubit extends Cubit<QuizState> {
     if (you != null) {
       if (answer == false) {
         you!.wrong = (you!.wrong ?? 0) + 1;
+<<<<<<< Updated upstream
+=======
+        me!.incorrectAnswer = (me!.incorrectAnswer ?? 0) + 1;
+>>>>>>> Stashed changes
         log("false");
       } else if (answer == true) {
         you!.correctAnswer = (you!.correctAnswer ?? 0) + 1;

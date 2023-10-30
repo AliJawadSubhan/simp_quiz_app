@@ -110,6 +110,7 @@ class LoginUI extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                             ),
                           ),
+<<<<<<< Updated upstream
                           const SizedBox(height: 20.0),
                           TextFormField(
                             controller: nameController,
@@ -169,6 +170,41 @@ class LoginUI extends StatelessWidget {
                           ),
                         ],
                       ),
+=======
+                          style: TextStyle(
+                            color: Colors.teal.shade900,
+                          ),
+                        ),
+                        const SizedBox(height: 20.0),
+                        ElevatedButton(
+                          onPressed: () {
+                            log(nameController.text.trim());
+                            loginCubit.userUILogic(nameController.text.trim());
+                          },
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.teal.shade900,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                          ),
+                          child: state is LoginLoadingSTATE
+                              ? const SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const Text(
+                                  "Let's Play",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                        ),
+                      ],
+>>>>>>> Stashed changes
                     ),
                   ),
                 ],

@@ -8,6 +8,7 @@ import 'package:simp_quiz_app/internet_cubit.dart';
 import 'package:simp_quiz_app/sccreen/login/login_cubit.dart';
 import 'package:simp_quiz_app/sccreen/login/login_ui.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
+import 'package:simp_quiz_app/sccreen/results/results_view.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginUI(),
+      home: ResultsView(),
     );
   }
 }

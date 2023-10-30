@@ -26,6 +26,7 @@ class _QueueScreenState extends State<QueueScreen> {
   }
 
   Future<void> initialize() async {
+<<<<<<< Updated upstream
     // log("Your Username: ${widget.userModel.username}");
     // log(" Your User id: ${widget.userModel.userUID}");
     await listofUsersWithoutID();
@@ -38,6 +39,47 @@ class _QueueScreenState extends State<QueueScreen> {
       username2: opponent.username.toString(),
     );
     navigateToNextScreen(room);
+=======
+    try {
+      // Log your Username and User ID if needed
+      // log("Your Username: ${widget.userModel.username}");
+      // log("Your User ID: ${widget.userModel.userUID}");
+
+      // Fetch a list of available opponents without the current user
+      await listofUsersWithoutID();
+
+      // Pick a random opponent
+      UserModel opponent = await pickRandomOpponent().catchError((onError) {
+        log("This is your opponent error: $onError");
+      });
+
+      log("This is your opponent: ${opponent.username}");
+
+      MultiplayerRoom room = await dbService.createARoom(
+        userId1: widget.userModel.userUID.toString(),
+        userId2: opponent.userUID.toString(),
+        username1: widget.userModel.username.toString(),
+        username2: opponent.username.toString(),
+      );
+
+      log("This is your room: ${room.id}");
+
+      final user = UserModel(
+        username: widget.userModel.username,
+        userUID: widget.userModel.userUID,
+        correctAnswer: widget.userModel.correctAnswer,
+        wrong: widget.userModel.wrong,
+        isInGame: true,
+      );
+
+      await dbService.updateUser(user);
+
+      navigateToNextScreen(room);
+    } catch (error) {
+      log("An error occurred during initialization: $error");
+      initialize();
+    }
+>>>>>>> Stashed changes
   }
 
   void navigateToNextScreen(room) {
@@ -65,6 +107,7 @@ class _QueueScreenState extends State<QueueScreen> {
 
   AuthServices authServices = AuthServices();
 
+<<<<<<< Updated upstream
   // UserModel opponent;
   Future<UserModel> pickRandomOpponent() async {
     if (listOfUsersWithoutThecurrentOne.isEmpty) {
@@ -76,6 +119,16 @@ class _QueueScreenState extends State<QueueScreen> {
       });
     } else if (listOfUsersWithoutThecurrentOne.length == 1) {
       return listOfUsersWithoutThecurrentOne[0];
+=======
+    if (availableOpponents.isEmpty) {
+      await Future.delayed(const Duration(seconds: 3));
+      return pickRandomOpponent();
+    } else {
+      var random = math.Random();
+      int randomIndex = random.nextInt(availableOpponents.length);
+      log("This is your opponent: ${availableOpponents[randomIndex].username}");
+      return availableOpponents[randomIndex];
+>>>>>>> Stashed changes
     }
     var random = math.Random();
     int randomIndex = random.nextInt(listOfUsersWithoutThecurrentOne.length);

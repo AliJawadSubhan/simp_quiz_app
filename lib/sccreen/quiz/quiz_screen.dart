@@ -7,6 +7,7 @@ import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_state.dart';
+import 'package:simp_quiz_app/sccreen/results/results_view.dart';
 
 class QuizScreen extends StatefulWidget {
   const QuizScreen(
@@ -58,14 +59,10 @@ class _QuizScreenState extends State<QuizScreen> {
                   listener: (context, state) {
                     if (state is QuizQuizCompletedState) {
                       Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Scaffold(
-                              body: Center(
-                                child: Text("Hello World,"),
-                              ),
-                            ),
-                          ));
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ResultsView()),
+                      );
                     }
                   },
                   buildWhen: (previous, current) => current is! QuizActionState,
@@ -111,6 +108,7 @@ class _QuizScreenState extends State<QuizScreen> {
                               itemBuilder: (context, index) {
                                 return GestureDetector(
                                   onTap: () {
+<<<<<<< Updated upstream
                                     // log(state.quizBrain
                                     //     .quizOptions(state.quizQuestions)[index]
                                     //     .toString());
@@ -123,6 +121,8 @@ class _QuizScreenState extends State<QuizScreen> {
                                     //     index,
                                     //     state.quizBrain.quizOptions(
                                             // state.quizQuestions)[index]);
+=======
+>>>>>>> Stashed changes
                                     quizCubit.pickedOption(
                                         index,
                                         state.quizBrain.quizOptions(
@@ -154,22 +154,92 @@ class _QuizScreenState extends State<QuizScreen> {
 
                                   return Column(
                                     children: [
+<<<<<<< Updated upstream
                                  const    Text("Your Score"),
+=======
+                                      Text(
+                                        "Your Score",
+                                        style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.teal.shade900,
+                                        ),
+                                      ),
+>>>>>>> Stashed changes
                                       isLoading
-                                          ? const CircularProgressIndicator() // Show a loading indicator
+                                          ? const CircularProgressIndicator(
+                                              color: Colors.teal,
+                                            ) // Show a loading indicator
                                           : hasData
                                               ? Padding(
                                                 padding: const EdgeInsets.all(8.0),
                                                 child: Row(
                                                     children: [
+                                                      AnimatedContainer(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                        curve: Curves.easeInOut,
+                                                        child: Icon(
+                                                          Icons.check_circle,
+                                                          color: snapshot.data!
+                                                                      .correctAnswer! >
+                                                                  0
+                                                              ? Colors.green
+                                                              : Colors
+                                                                  .transparent,
+                                                        ),
+                                                      ),
                                                       Text(
-                                                          " Correct : ${snapshot.data!.correctAnswer}"),
+                                                        " Correct : ${snapshot.data!.correctAnswer}",
+                                                        style: TextStyle(
+                                                          color: Colors
+                                                              .teal.shade900,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                      AnimatedContainer(
+                                                        duration:
+                                                            const Duration(
+                                                                milliseconds:
+                                                                    500),
+                                                        curve: Curves.easeInOut,
+                                                        child: Icon(
+                                                          Icons.cancel,
+                                                          color: snapshot.data!
+                                                                      .wrong! >
+                                                                  0
+                                                              ? Colors.red
+                                                              : Colors
+                                                                  .transparent,
+                                                        ),
+                                                      ),
                                                       Text(
-                                                          " Wrong : ${snapshot.data!.wrong}"),
+                                                        " Wrong : ${snapshot.data!.wrong}",
+                                                        style: TextStyle(
+                                                          color: Colors
+                                                              .teal.shade900,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
                                                     ],
                                                   ),
+<<<<<<< Updated upstream
                                               )
                                               : const Text("No Data Available"),
+=======
+                                                )
+                                              : Text(
+                                                  "No Data Available",
+                                                  style: TextStyle(
+                                                    color: Colors.teal.shade900,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+>>>>>>> Stashed changes
                                     ],
                                   );
                                 },
@@ -208,33 +278,10 @@ class _QuizScreenState extends State<QuizScreen> {
                               ),
                             ],
                           ),
-
-                          // Text(
-                          //     "Your correct answers ${quizCubit.me?.correctAnswer ?? "sad"}"),
-                          // Text(
-                          //     "Your wrong answers ${quizCubit.me?.incorrectAnswer ?? "sad"}"),
-                          // // Text(
-                          //     "Your opponent correct answers ${quizCubit.participant?.correctAnswer ?? "sad"}"),
-                          // Text(
-                          // "Your opponent wrong answers ${quizCubit.participant?.correctAnswer ?? "sad"}"),
-                          //  if (state is QuizScoreUpdateState)
-                          // Text(quizCubit.you?.correctAnswer == null
-                          //     ? "sad"
-                          //     : "${quizCubit.you!.correctAnswer.toString()} Your Correct Answer"),
-                          // Text(quizCubit.you?.wrong == null
-                          //     ? "no sad"
-                          //     : "${quizCubit.you!.wrong.toString()} Your Wrong answer"),
-                          // // =---
-                          // Text(quizCubit.yourOpponent?.correctAnswer == null
-                          //     ? "sad"
-                          //     : "${quizCubit.yourOpponent!.correctAnswer.toString()} Opponent corect answer"),
-                          // Text(quizCubit.yourOpponent?.wrong == null
-                          //     ? "no sad"
-                          //     : "${quizCubit.yourOpponent!.wrong.toString()} Opponent Wrong answer "),
                         ],
                       );
                     }
-                    return const Text("123333");
+                    return const Text("Loading");
                   }),
             ],
           ),
@@ -243,6 +290,7 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 }
+<<<<<<< Updated upstream
 
 class Quizmraom {
   int questionNumber = 0;
@@ -286,3 +334,5 @@ class Quizmraom {
     return quizQuestions[questionNumber].correctAnswer;
   }
 }
+=======
+>>>>>>> Stashed changes

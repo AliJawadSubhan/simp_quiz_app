@@ -83,11 +83,11 @@ class _QuizScreenState extends State<QuizScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Text(
-                            "Your Opponent: ${quizCubit.yourOpponent?.username}",
+                            "Your Opponent: ${quizCubit.yourOpponent?.username ?? 'Opponent'}",
                             style: const TextStyle(color: Colors.red),
                           ),
                           Text(
-                            "You: ${quizCubit.you?.username}",
+                            "You: ${quizCubit.you?.username ?? 'You'}",
                             style: const TextStyle(color: Colors.pink),
                           ),
                           Text(
@@ -119,10 +119,10 @@ class _QuizScreenState extends State<QuizScreen> {
                                     // });
                                     // log();
                                     // quizCubit.quizBrain.quizAnswer(state.quizQuestions);
-                                    // quizCubit.userTappedmE(
-                                    //     index,
-                                    //     state.quizBrain.quizOptions(
-                                            // state.quizQuestions)[index]);
+                                    quizCubit.userTappedmE(
+                                        index,
+                                        state.quizBrain.quizOptions(
+                                            state.quizQuestions)[index]);
                                     quizCubit.pickedOption(
                                         index,
                                         state.quizBrain.quizOptions(
@@ -154,13 +154,14 @@ class _QuizScreenState extends State<QuizScreen> {
 
                                   return Column(
                                     children: [
-                                 const    Text("Your Score"),
+                                      const Text("Your Score"),
                                       isLoading
                                           ? const CircularProgressIndicator() // Show a loading indicator
                                           : hasData
                                               ? Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Row(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Row(
                                                     children: [
                                                       Text(
                                                           " Correct : ${snapshot.data!.correctAnswer}"),
@@ -168,7 +169,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                                           " Wrong : ${snapshot.data!.wrong}"),
                                                     ],
                                                   ),
-                                              )
+                                                )
                                               : const Text("No Data Available"),
                                     ],
                                   );
@@ -188,11 +189,12 @@ class _QuizScreenState extends State<QuizScreen> {
                                     children: [
                                       const Text("Opponent's Score"),
                                       isLoading
-                                          ?   const CircularProgressIndicator() // Show a loading indicator
+                                          ? const CircularProgressIndicator() // Show a loading indicator
                                           : hasData
                                               ? Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Row(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Row(
                                                     children: [
                                                       Text(
                                                           " Correct : ${snapshot.data!.correctAnswer}"),
@@ -200,7 +202,7 @@ class _QuizScreenState extends State<QuizScreen> {
                                                           " Wrong : ${snapshot.data!.wrong}"),
                                                     ],
                                                   ),
-                                              )
+                                                )
                                               : const Text("No Data Available"),
                                     ],
                                   );

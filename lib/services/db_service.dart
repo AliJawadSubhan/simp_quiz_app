@@ -1,5 +1,5 @@
 import 'dart:developer';
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +17,7 @@ class FireStoreService {
         "user_id": id,
         "correct": 0,
         "wrong": 0,
+        'inGame': false,
       });
     } catch (e) {
       log('firestore: ${e.toString()}');
@@ -38,20 +39,20 @@ class FireStoreService {
         .where('user2.user_uid', isEqualTo: userId1)
         .get();
     if (existingRoomQuery.docs.isNotEmpty) {
-      // MultiplayerRoom room;
-      log("Don't do this");
-      final snapshot = await roomMultiplayerCollection
-          .where('user1.user_uid', isEqualTo: userId1)
-          .where('user2.user_uid', isEqualTo: userId2)
-          .get();
-      return MultiplayerRoom.fromFirebase(snapshot.docs.first);
+      // // MultiplayerRoom room;
+      // log("Don't do this");
+      // final snapshot = await roomMultiplayerCollection
+      //     .where('user1.user_uid', isEqualTo: userId1)
+      //     .where('user2.user_uid', isEqualTo: userId2)
+      //     .get();
+      return MultiplayerRoom.fromFirebase(existingRoomQuery.docs.first);
       // return
     } else if (secondExistingRoomQuery.docs.isNotEmpty) {
-      final snapshot = await roomMultiplayerCollection
-          .where('user1.user_uid', isEqualTo: userId2)
-          .where('user2.user_uid', isEqualTo: userId1)
-          .get();
-      return MultiplayerRoom.fromFirebase(snapshot.docs.first);
+      // final snapshot = await roomMultiplayerCollection
+      //     .where('user1.user_uid', isEqualTo: userId2)
+      //     .where('user2.user_uid', isEqualTo: userId1)
+      //     .get();
+      return MultiplayerRoom.fromFirebase(secondExistingRoomQuery.docs.first);
     } else {
       final roomID = roomMultiplayerCollection.doc().id;
 
@@ -93,6 +94,7 @@ class FireStoreService {
         username: user.username,
         correctAnswer: user.correctAnswer,
         wrong: user.wrong,
+        isInGame: user.isInGame,
       );
 
       // Update the document with the new data
@@ -104,18 +106,17 @@ class FireStoreService {
       // Handle success
     } catch (e) {
       // Handle any errors
-      print("Error updating user document: $e");
+      log("Error updating user document: $e");
     }
   }
 
-  Future<void> updateUserResults(
-      MultiplayerUser user1, MultiplayerUser user2, String roomID) async {
+  Future<void> updateUserResults(MultiplayerUser user1, String roomID) async {
     final roomCollectionID = db.collection("multiplayerRoom").doc(roomID);
 
     final resultCollecForUser1 =
         roomCollectionID.collection("results").doc(user1.user_uid);
-    final resultCollecForUser2 =
-        roomCollectionID.collection("results").doc(user2.user_uid);
+    // final resultCollecForUser2 =
+    //     roomCollectionID.collection("results").doc(user2.user_uid);
 
     final userone = MultiplayerUser(
       username: user1.username,
@@ -124,71 +125,27 @@ class FireStoreService {
       correctAnswer: user1.correctAnswer,
     );
 
-    final userTwo = MultiplayerUser(
-      username: user2.username,
-      user_uid: user2.user_uid,
-      incorrectAnswer: user2.incorrectAnswer,
-      correctAnswer: user2.correctAnswer,
-    );
+    // final userTwo = MultiplayerUser(
+    //   username: user2.username,
+    //   user_uid: user2.user_uid,
+    //   incorrectAnswer: user2.incorrectAnswer,
+    //   correctAnswer: user2.correctAnswer,
+    // );
     await resultCollecForUser1.update(userone.toFirebase());
 
-    await resultCollecForUser2.update(userTwo.toFirebase());
+    // await resultCollecForUser2.update(userTwo.toFirebase());
   }
-
-  // Future<Us
-//   Future<void> updateUserResults(
-//       MultiplayerUser user1, MultiplayerUser user2, String roomID) async {
-//     final roomCollectionID = db.collection("multiplayerRoom").doc(roomID);
-
-//      final resultCollecForUser1 =  roomCollectionID.collection("results").doc(user1.user_uid);
-
-//      final resultCollecForUser2 =  roomCollectionID.collection("results").doc(user2.user_uid);
-
-//     roomCollectionID.collection("results").doc(user1.user_uid).update(user1.toFirebase());
-
-//     roomCollectionID.collection("results").doc(user2.user_uid).update(user2.toFirebase());
-//     // final room = MultiplayerRoom(id: roomID, user1: user1, user2: user2);
-
-//     // // Execute the queries
-//     // final onePossQuery = await db
-//     //     .collection('multiplayerRoom')
-//     //     .where('user1.user_uid', isEqualTo: user1.user_uid)
-//     //     .get();
-//     // final secondPossQuery = await db
-//     //     .collection('multiplayerRoom')
-//     //     .where('user1.user_uid', isEqualTo: user2.user_uid)
-//     //     .get();
-
-//     // // Check if either of the queries has results
-//     // if (onePossQuery.docs.isNotEmpty) {
-//     //   // Update the room based on the first query
-//     //   // final roomData = onePossQuery.docs.first.data();
-//     //   final room = MultiplayerRoom.fromFirebase(onePossQuery.docs.first);
-//     //   // Update the room as needed
-//     //   await roomCollectionID.update(room.toFirebase());
-//     // } else if (secondPossQuery.docs.isNotEmpty) {
-//     //   // Update the room based on the second query
-//     //   final roomData = secondPossQuery.docs.first.data();
-//     //   final room = MultiplayerRoom.fromFirebase(secondPossQuery.docs.first);
-//     //   // Update the room as needed
-//     //   await roomCollectionID.update(room.toFirebase());
-//     // } else {
-//     //   throw Exception("No matching room found for user1 or user2.");
-//     // }
-//       // roomCollectionID.update(room.toFirebase());
-
-// // return
-//     // return room;
-//   }
 
   bool updatesUser(UserModel user) {
     final userDOCRED = db.collection("users").doc(user.userUID);
     try {
       final userModel = UserModel(
-          username: user.username,
-          userUID: user.userUID,
-          correctAnswer: user.correctAnswer,
-          wrong: user.wrong);
+        username: user.username,
+        userUID: user.userUID,
+        correctAnswer: user.correctAnswer,
+        wrong: user.wrong,
+        isInGame: user.isInGame,
+      );
       userDOCRED.update(
         userModel.toFirebase(),
       );
@@ -221,6 +178,7 @@ class FireStoreService {
     final userCollection = db
         .collection("users")
         .where("user_id", isNotEqualTo: currentUserID)
+        // .where('inGame', ixsEqualTo: false)
         .snapshots();
 
     return userCollection.map((querySnapshots) {
@@ -229,8 +187,8 @@ class FireStoreService {
       for (var data in querySnapshots.docs) {
         UserModel userModel = UserModel.fromSnapshot(data);
         userList.add(userModel);
-        log('Category Model: ${userModel.username}');
-        log('Data : ${data.get('user_id')}');
+        log('User Model without the current: ${userModel.username}');
+        log('Data without the current one: ${data.get('user_id')}');
       }
       return userList;
     });
@@ -238,7 +196,6 @@ class FireStoreService {
 
   Stream<UserModel> getUserByIDSTREAM({required String userid}) {
     final userDocRef = db.collection("users").doc(userid);
-
     return userDocRef.snapshots().map((snapshot) {
       if (snapshot.exists) {
         return UserModel.fromSnapshot(snapshot);

@@ -11,8 +11,8 @@ import 'dart:math' as math;
 import 'package:simp_quiz_app/services/db_service.dart';
 
 class QueueScreen extends StatefulWidget {
-  const QueueScreen({super.key, required this.userModel});
-  final UserModel userModel;
+  QueueScreen({super.key, required this.userModel});
+  UserModel userModel;
 
   @override
   State<QueueScreen> createState() => _QueueScreenState();
@@ -25,6 +25,8 @@ class _QueueScreenState extends State<QueueScreen> {
     initialize();
   }
 
+// changede
+// didcha
   Future<void> initialize() async {
     // log("Your Username: ${widget.userModel.username}");
     // log(" Your User id: ${widget.userModel.userUID}");
@@ -37,6 +39,26 @@ class _QueueScreenState extends State<QueueScreen> {
       username1: widget.userModel.username.toString(),
       username2: opponent.username.toString(),
     );
+
+    final user = UserModel(
+      username: widget.userModel.username,
+      userUID: widget.userModel.userUID,
+      correctAnswer: widget.userModel.correctAnswer,
+      wrong: widget.userModel.wrong,
+      isInGame: true,
+    );
+    // final opponents = UserModel(
+    //   username: opponent.username,
+    //   userUID: opponent.userUID,
+    //   correctAnswer: opponent.correctAnswer,
+    //   wrong: opponent.wrong,
+    //   isInGame: true,
+    // );
+    dbService.updateUser(user).catchError(
+        // test: .
+        (err) {
+      log(err.toString());
+    });
     navigateToNextScreen(room);
   }
 
@@ -64,40 +86,54 @@ class _QueueScreenState extends State<QueueScreen> {
   }
 
   AuthServices authServices = AuthServices();
-
-  // UserModel opponent;
   Future<UserModel> pickRandomOpponent() async {
-    if (listOfUsersWithoutThecurrentOne.isEmpty) {
+    final availableOpponents = listOfUsersWithoutThecurrentOne
+        .where((user) => user.isInGame == false)
+        .toList();
+
+    if (availableOpponents.isEmpty) {
       await Future.delayed(
-          const Duration(
-            seconds: 3,
-          ), () {
-        return pickRandomOpponent();
-      });
-    } else if (listOfUsersWithoutThecurrentOne.length == 1) {
-      return listOfUsersWithoutThecurrentOne[0];
+        const Duration(seconds: 3),
+        () {
+          return pickRandomOpponent();
+        },
+      );
     }
+    // if (condition) {
+
+    // }
+
     var random = math.Random();
-    int randomIndex = random.nextInt(listOfUsersWithoutThecurrentOne.length);
-    return listOfUsersWithoutThecurrentOne[randomIndex];
+    int randomIndex = random.nextInt(availableOpponents.length);
+    log("I think this is your opponent: ${availableOpponents[randomIndex].username!}");
+    return availableOpponents[randomIndex];
   }
 
   FireStoreService dbService = FireStoreService();
 
   List<UserModel> listOfUsersWithoutThecurrentOne = [];
-  logValues() async {}
 
   @override
   Widget build(BuildContext context) {
+    // initialize();
     log("length ${listOfUsersWithoutThecurrentOne.length}");
-
+    // oppone
     log("message ${getIt<InternetCubit>().username}");
+
     return Scaffold(
       body: Center(
         child: GestureDetector(
           onTap: () async {
+            final user = UserModel(
+              username: widget.userModel.username,
+              userUID: widget.userModel.userUID,
+              correctAnswer: widget.userModel.correctAnswer,
+              wrong: widget.userModel.wrong,
+              isInGame: true,
+            );
+            final succesBool = dbService.updatesUser(user);
             bool failORsucess = await authServices.userSignOUT();
-            if (failORsucess) {
+            if (failORsucess && succesBool) {
               // ignore: use_build_context_synchronously
               Navigator.pushReplacement(context, MaterialPageRoute(
                 builder: (context) {

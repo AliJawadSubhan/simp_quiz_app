@@ -106,31 +106,25 @@ class QuizCubit extends Cubit<QuizState> {
 
     if (me != null && room != null) {
       MultiplayerUser? tempUser1;
-      MultiplayerUser? tempUser2;
+      // MultiplayerUser? tempUser2;
       if (me?.user_uid == room?.user1.user_uid) {
         tempUser1 = me;
-        tempUser2 = room?.user2;
+        // tempUser2 = room?.user2;
       } else {
         tempUser1 = me;
-        tempUser2 = room?.user1;
+        // tempUser2 = room?.user1;
       }
-      if (tempUser1 != null && tempUser2 != null) {
+      if (tempUser1 != null ) {
         if (answer) {
           tempUser1.correctAnswer = (tempUser1.correctAnswer ?? 0) + 1;
         } else {
           tempUser1.incorrectAnswer = (tempUser1.incorrectAnswer ?? 0) + 1;
         }
-        log("my Score: Correct ${tempUser1.correctAnswer}, Wrong ${tempUser1.incorrectAnswer}");
+        // log("my Score: Correct ${tempUser1.correctAnswer}, Wrong ${tempUser1.incorrectAnswer}");
+  
+        log("${tempUser1.username} temp1Username");
 
-        // Update scores for tempUser2
-        if (answer) {
-          tempUser2.correctAnswer = (tempUser2.correctAnswer ?? 0) + 1;
-        } else {
-          tempUser2.incorrectAnswer = (tempUser2.incorrectAnswer ?? 0) + 1;
-        }
-        log("${tempUser1.username} temp1Username, ${tempUser2.username} temp2Username");
-
-        fireStoreService.updateUserResults(tempUser1, tempUser2, room!.id);
+        fireStoreService.updateUserResults(tempUser1, room!.id);
       } else {
         log("tempUser1 or tempUser2 is null. Unable to update results.");
       }

@@ -140,6 +140,16 @@ class _QueueScreenState extends State<QueueScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: SizedBox(
+                      height: 120,
+                      width: 120,
+                      child: Image.asset("images/game_logo.png")),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
                 // Game Name
                 const Text(
                   "Crazy Quiz Masters",

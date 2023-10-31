@@ -93,6 +93,14 @@ class LoginScreen extends StatelessWidget {
                         const Spacer(flex: 2), //2/6
                         Align(
                           alignment: Alignment.center,
+                          child: SizedBox(
+                              height: 120,
+                              width: 120,
+                              child: Image.asset("images/game_logo.png")),
+                        ),
+                        const SizedBox(height: 20,),
+                        Align(
+                          alignment: Alignment.center,
                           child: Text(
                             "QuizBattles: Multiplayer Mayhem",
                             style: Theme.of(context)
@@ -161,6 +169,7 @@ class LoginScreen extends StatelessWidget {
                                     "Let's start the quiz",
                                     style: TextStyle(
                                       color: Colors.white,
+                                      fontWeight: FontWeight.bold,
                                       // fontSize: 16.0,
                                     ),
                                   ),

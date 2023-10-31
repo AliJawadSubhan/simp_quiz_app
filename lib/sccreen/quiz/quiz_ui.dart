@@ -2,10 +2,12 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
+import 'package:simp_quiz_app/sccreen/quiz/quiz_state.dart';
 
 class QuizUI extends StatelessWidget {
   QuizUI({super.key, required this.thisRoom, required this.currentUser});
@@ -20,6 +22,7 @@ class QuizUI extends StatelessWidget {
   QuizCubit quizCubit = QuizCubit();
   @override
   Widget build(BuildContext context) {
+    quizCubit.updateMultiplayerRoom(thisRoom, currentUser);
     return Scaffold(
       // backgroundColor: ,
       body: Stack(
@@ -58,100 +61,138 @@ class QuizUI extends StatelessWidget {
               ),
             ),
           ),
-          Padding(
-            padding:
-                EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.3),
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(21),
-                  topRight: Radius.circular(21),
-                ),
-              ),
-              height: double.infinity,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    const Text(
-                      "Which planet is known as the Red Planet?",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontStyle: FontStyle.italic,
+          BlocConsumer<QuizCubit, QuizState>(
+              listener: (context, state) {
+                if (state is QuizQuizCompletedState) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Scaffold(
+                        backgroundColor: Colors.blue.shade200,
+                        body: const Center(
+                          child: Text(
+                            "Hello World",
+                            style: TextStyle(
+                              fontSize: 24.0,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 12,
+                  );
+                }
+              },
+              buildWhen: (previous, current) => current is! QuizActionState,
+              listenWhen: (previous, current) => current is QuizActionState,
+              bloc: quizCubit,
+              builder: (context, state) {
+                if (state is QuizLoadingDemoState) {
+                  return const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: SizedBox(child: LinearProgressIndicator()),
+                  );
+                }
+
+                return Padding(
+                  padding: EdgeInsets.only(
+                      top: MediaQuery.of(context).size.height * 0.3),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(21),
+                        topRight: Radius.circular(21),
+                      ),
                     ),
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: listofOptions.length,
-                        itemBuilder: (context, index) {
-                          // item
-                          return InkWell(
-                            onTap: () {
-                              log("button tapped ${listofOptions[index]}");
-                            },
-                            child: Material(
-                              child: Padding(
-                                padding: const EdgeInsets.only(bottom: 21),
-                                child: Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black,
-                                    ),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
+                    height: double.infinity,
+                    width: double.infinity,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          const Text(
+                            "Which planet is known as the Red Planet?",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 24,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ),
+                          Expanded(
+                            child: ListView.builder(
+                              itemCount: listofOptions.length,
+                              itemBuilder: (context, index) {
+                                // item
+                                return InkWell(
+                                  onTap: () {
+                                    log("button tapped ${listofOptions[index]}");
+                                  },
                                   child: Material(
-                                    type: MaterialType.transparency,
-                                    child: InkWell(
-                                      onTap: () {
-                                        log("button tapped ${listofOptions[index]}");
-                                      },
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: Padding(
-                                        padding:
-                                            const EdgeInsets.only(left: 12),
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Row(
-                                            children: [
-                                              Text(listofOptions[index]
-                                                  .toUpperCase()),
-                                              const SizedBox(
-                                                width: 5,
+                                    child: Padding(
+                                      padding:
+                                          const EdgeInsets.only(bottom: 21),
+                                      child: Container(
+                                        height:
+                                            MediaQuery.of(context).size.height *
+                                                0.1,
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: Colors.black,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(12),
+                                        ),
+                                        child: Material(
+                                          type: MaterialType.transparency,
+                                          child: InkWell(
+                                            onTap: () {
+                                              log("button tapped ${listofOptions[index]}");
+                                            },
+                                            borderRadius:
+                                                BorderRadius.circular(12),
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 12),
+                                              child: Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Row(
+                                                  children: [
+                                                    Text(listofOptions[index]
+                                                        .toUpperCase()),
+                                                    const SizedBox(
+                                                      width: 5,
+                                                    ),
+                                                    const Text(
+                                                      "Options",
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
-                                              const Text(
-                                                "Options",
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
+                                );
+                              },
                             ),
-                          );
-                        },
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+                  ),
+                );
+              }),
         ],
       ),
     );

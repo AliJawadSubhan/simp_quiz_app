@@ -7,6 +7,7 @@ import 'package:simp_quiz_app/injection.dart';
 import 'package:simp_quiz_app/internet_cubit.dart';
 import 'package:simp_quiz_app/sccreen/login/login_cubit.dart';
 import 'package:simp_quiz_app/sccreen/login/login_ui.dart';
+import 'package:simp_quiz_app/sccreen/login_screen/login_screen.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_cubit.dart';
 
 void main() async {
@@ -35,12 +36,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginUI(),
+      home:  LoginScreen(),
     );
   }
 }

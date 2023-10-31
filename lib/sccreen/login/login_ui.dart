@@ -142,7 +142,7 @@ class LoginUI extends StatelessWidget {
                             color: Colors.teal.shade900,
                           ),
                         ),
-                        SizedBox(height: 20.0),
+                       const SizedBox(height: 20.0),
                         ElevatedButton(
                           onPressed: () {
                             log(nameController.text.trim());

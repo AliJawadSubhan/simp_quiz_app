@@ -34,7 +34,7 @@ class LoginCubit extends Cubit<LoginState> {
 
   UserModel? userModel;
   _userTapLogin(String username) async {
-    await Future.delayed(const Duration(seconds: 2));
+    // await Future.delayed(const Duration(seconds: 2));
     emit(LoginLoadingSTATE());
     try {
       userModel = await authServices.createGuestUser(username);

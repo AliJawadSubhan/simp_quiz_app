@@ -8,7 +8,10 @@ class QuizBrainLogic {
   }
 
   bool isLastQuestion(List<QuizQuestionModel> q) {
-    return questionNumber == (q.length + 1);
+    return questionNumber == q.length;
+  }
+  int quizLength(List<QuizQuestionModel> q) {
+    return q.length;
   }
   // final List<QuizQuestionModel> quizQuestions;
   // Quizmraom({

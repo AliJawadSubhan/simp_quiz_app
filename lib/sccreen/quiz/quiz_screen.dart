@@ -16,36 +16,27 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-// final QuizCubit quizCubit = QuizCubit();
-  // final QuizCubit quizCubit = QuizCubit();
-  // static List<QuizQuestionModel> questionModel = [];
-
-  // Future<void> myQuizModel() async {
-  //   FireStoreService service = FireStoreService();
-  //   // setState(() {
-  //   service.getQuizQuestions().listen((event) {
-  //     setState(() {
-  //       questionModel = event;
-  //     });
-  //   });
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   myQuizModel();
-  //   // log(questionModel.first.correctAnswer);
-  // }
-
-  // Quizmraom quizBrain = Quizmraom();
-
   QuizCubit quizCubit = QuizCubit();
 
   @override
   Widget build(BuildContext context) {
     quizCubit.updateMultiplayerRoom(widget.thisRoom, widget.currentUser);
     return Scaffold(
-      backgroundColor: Colors.blue.shade200, // Background color
+      appBar: AppBar(
+        backgroundColor: Colors.white, // Background color
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: const Text(
+          "Quiz game",
+          style: TextStyle(
+            fontSize: 21,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+          ),
+        ),
+      ),
+      backgroundColor: Colors.white, // Background color
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -60,7 +51,7 @@ class _QuizScreenState extends State<QuizScreen> {
                       MaterialPageRoute(
                         builder: (context) => Scaffold(
                           backgroundColor: Colors.blue.shade200,
-                          body: Center(
+                          body: const Center(
                             child: Text(
                               "Hello World",
                               style: TextStyle(
@@ -88,24 +79,26 @@ class _QuizScreenState extends State<QuizScreen> {
                       children: <Widget>[
                         Text(
                           "Your Opponent: ${quizCubit.yourOpponent?.username ?? 'Opponent'}",
-                          style: TextStyle(color: Colors.red, fontSize: 18.0),
+                          style: const TextStyle(
+                              color: Colors.red, fontSize: 18.0),
                         ),
                         Text(
                           "You: ${quizCubit.you?.username ?? 'You'}",
-                          style: TextStyle(color: Colors.pink, fontSize: 18.0),
+                          style: const TextStyle(
+                              color: Colors.pink, fontSize: 18.0),
                         ),
                         Text(
                           state.quizBrain
                               .quizQuestion(state.quizQuestions)
                               .toString(),
-                          style: TextStyle(
-                            color: Colors.white,
+                          style: const TextStyle(
+                            color: Colors.black,
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(
-                          height: 150,
+                          height: MediaQuery.of(context).size.height * 0.34,
                           width: 241,
                           child: ListView.builder(
                             itemCount: state
@@ -122,19 +115,31 @@ class _QuizScreenState extends State<QuizScreen> {
                                   );
                                 },
                                 child: Container(
+                                  width: double.infinity,
                                   padding: const EdgeInsets.all(12.0),
                                   margin:
                                       const EdgeInsets.symmetric(vertical: 6.0),
                                   decoration: BoxDecoration(
-                                    color: Colors.teal,
                                     borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                        color:
+                                            Colors.black), // Add a black border
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Colors.white,
+                                        Colors.grey
+                                      ], // Gradient from white to grey
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                    ),
                                   ),
                                   child: Text(
+                                    // ignore: prefer_interpolation_to_compose_strings
                                     "${index + 1}: " +
                                         state.quizBrain.quizOptions(
                                             state.quizQuestions)[index],
                                     style: const TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black, // Text color
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
@@ -148,13 +153,12 @@ class _QuizScreenState extends State<QuizScreen> {
                           children: [
                             // Your Score
                             StreamBuilder<UserModel?>(
-                              stream: quizCubit
-                                  .showUserScoreStream(quizCubit.you!.userUID!),
+                              stream: quizCubit.showUserScoreStream(
+                                  quizCubit.you?.userUID ?? ""),
                               builder: (context, snapshot) {
                                 final isLoading = snapshot.connectionState ==
                                     ConnectionState.waiting;
                                 final hasData = snapshot.hasData;
-
                                 return Column(
                                   children: [
                                     const Text(
@@ -174,13 +178,13 @@ class _QuizScreenState extends State<QuizScreen> {
                                                 child: Row(
                                                   children: [
                                                     Text(
-                                                      " Correct : ${snapshot.data!.correctAnswer ?? 0}",
+                                                      " Correct : ${snapshot.data?.correctAnswer ?? 0}",
                                                       style: const TextStyle(
                                                         color: Colors.green,
                                                       ),
                                                     ),
                                                     Text(
-                                                      " Wrong : ${snapshot.data!.wrong ?? 0}",
+                                                      " Wrong : ${snapshot.data?.wrong ?? 0}",
                                                       style: const TextStyle(
                                                         color: Colors.red,
                                                       ),
@@ -193,11 +197,9 @@ class _QuizScreenState extends State<QuizScreen> {
                                 );
                               },
                             ),
-
-                            // Opponent's Score
                             StreamBuilder<UserModel?>(
                               stream: quizCubit.showUserScoreStream(
-                                  quizCubit.yourOpponent!.userUID!),
+                                  quizCubit.yourOpponent?.userUID ?? ""),
                               builder: (context, snapshot) {
                                 final isLoading = snapshot.connectionState ==
                                     ConnectionState.waiting;
@@ -205,7 +207,7 @@ class _QuizScreenState extends State<QuizScreen> {
 
                                 return Column(
                                   children: [
-                                   const Text(
+                                    const Text(
                                       "Opponent's Score",
                                       style: TextStyle(
                                         color: Colors.blue,
@@ -222,13 +224,13 @@ class _QuizScreenState extends State<QuizScreen> {
                                                 child: Row(
                                                   children: [
                                                     Text(
-                                                      " Correct : ${snapshot.data!.correctAnswer ?? 0}",
+                                                      " Correct : ${snapshot.data?.correctAnswer ?? 0}",
                                                       style: const TextStyle(
                                                         color: Colors.green,
                                                       ),
                                                     ),
                                                     Text(
-                                                      " Wrong : ${snapshot.data!.wrong ?? 0}",
+                                                      " Wrong : ${snapshot.data?.wrong ?? 0}",
                                                       style: const TextStyle(
                                                         color: Colors.red,
                                                       ),

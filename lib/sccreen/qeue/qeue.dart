@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:simp_quiz_app/injection.dart';
 import 'package:simp_quiz_app/internet_cubit.dart';
 import 'package:simp_quiz_app/model/room_model.dart';
@@ -52,14 +53,19 @@ class _QueueScreenState extends State<QueueScreen> {
       wrong: widget.userModel.wrong,
       isInGame: true,
     );
-    // final opponents = UserModel(
-    //   username: opponent.username,
-    //   userUID: opponent.userUID,
-    //   correctAnswer: opponent.correctAnswer,
-    //   wrong: opponent.wrong,
-    //   isInGame: true,
-    // );
+    final opponents = UserModel(
+      username: opponent.username,
+      userUID: opponent.userUID,
+      correctAnswer: opponent.correctAnswer,
+      wrong: opponent.wrong,
+      isInGame: true,
+    );
     dbService.updateUser(user).catchError(
+        // test: .
+        (err) {
+      log(err.toString());
+    });
+    dbService.updateUser(opponents).catchError(
         // test: .
         (err) {
       log(err.toString());
@@ -98,7 +104,7 @@ class _QueueScreenState extends State<QueueScreen> {
 
     if (availableOpponents.isEmpty) {
       await Future.delayed(const Duration(seconds: 3));
-      return pickRandomOpponent(); 
+      return pickRandomOpponent();
     } else {
       var random = math.Random();
       int randomIndex = random.nextInt(availableOpponents.length);
@@ -121,29 +127,62 @@ class _QueueScreenState extends State<QueueScreen> {
     log("message ${getIt<InternetCubit>().username}");
 
     return Scaffold(
-      body: Center(
-        child: GestureDetector(
-          onTap: () async {
-            final user = UserModel(
-              username: widget.userModel.username,
-              userUID: widget.userModel.userUID,
-              correctAnswer: widget.userModel.correctAnswer,
-              wrong: widget.userModel.wrong,
-              isInGame: true,
-            );
-            final succesBool = dbService.updatesUser(user);
-            bool failORsucess = await authServices.userSignOUT();
-            if (failORsucess && succesBool) {
-              // ignore: use_build_context_synchronously
-              Navigator.pushReplacement(context, MaterialPageRoute(
-                builder: (context) {
-                  return LoginUI();
-                },
-              ));
-            }
-          },
-          child: const Text("Please hold. "),
-        ),
+      body: Stack(
+        children: [
+          // Background Image
+          Positioned(
+            left: 0,
+            right: 0,
+            child: SvgPicture.asset("images/bg.svg", fit: BoxFit.fill),
+          ),
+          // Stylish Content
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // Game Name
+                const Text(
+                  "Crazy Quiz Masters",
+                  style: TextStyle(
+                    fontSize: 32,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                // Message
+                const Text(
+                  "Looking for your Opponent...",
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                // About Us
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Text(
+                    "About Us:\nWe are the Crazy Quiz Masters, dedicated to bringing you the most challenging and fun quiz experience. Get ready to test your knowledge and have a blast!",
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

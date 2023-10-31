@@ -6,6 +6,7 @@ import 'package:simp_quiz_app/model/room_model.dart';
 import 'package:simp_quiz_app/model/user_model.dart';
 import 'package:simp_quiz_app/sccreen/login/login_ui.dart';
 import 'package:simp_quiz_app/sccreen/quiz/quiz_screen.dart';
+import 'package:simp_quiz_app/sccreen/quiz/quiz_ui.dart';
 import 'package:simp_quiz_app/services/auth_serivces.dart';
 import 'dart:developer';
 import 'dart:math' as math;
@@ -76,7 +77,7 @@ class _QueueScreenState extends State<QueueScreen> {
   void navigateToNextScreen(room) {
     Navigator.of(context).pushReplacement(
       MaterialPageRoute(
-        builder: (context) => QuizScreen(
+        builder: (context) => QuizUI(
           thisRoom: room,
           currentUser: widget.userModel,
         ),

@@ -7,6 +7,10 @@ class QuizBrainLogic {
     questionNumber++;
   }
 
+
+  int currentQuizQuestion() {
+    return questionNumber;
+  }
   bool isLastQuestion(List<QuizQuestionModel> q) {
     return questionNumber == q.length;
   }

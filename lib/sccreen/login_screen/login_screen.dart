@@ -116,7 +116,7 @@ class LoginScreen extends StatelessWidget {
                         const Align(
                           alignment: Alignment.center,
                           child: Text(
-                            "Enter your informations below",
+                            "Enter your information below",
                             style: TextStyle(color: Colors.white),
                           ),
                         ),

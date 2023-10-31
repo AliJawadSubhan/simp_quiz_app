@@ -53,190 +53,202 @@ class _QuizScreenState extends State<QuizScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               BlocConsumer<QuizCubit, QuizState>(
-                
-                  listener: (context, state) {
-                    if (state is QuizQuizCompletedState) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Scaffold(
-                              body: Center(
-                                child: Text("Hello World,"),
+                listener: (context, state) {
+                  if (state is QuizQuizCompletedState) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Scaffold(
+                          backgroundColor: Colors.blue.shade200,
+                          body: Center(
+                            child: Text(
+                              "Hello World",
+                              style: TextStyle(
+                                fontSize: 24.0,
+                                color: Colors.white,
                               ),
                             ),
-                          ));
-                    }
-                  },
-                  buildWhen: (previous, current) => current is! QuizActionState,
-                  listenWhen: (previous, current) => current is QuizActionState,
-                  bloc: quizCubit,
-                  builder: (context, state) {
-                    if (state is QuizLoadingDemoState) {
-                      return const CupertinoActivityIndicator(
-                        animating: true,
-                      );
-                    }
+                          ),
+                        ),
+                      ),
+                    );
+                  }
+                },
+                buildWhen: (previous, current) => current is! QuizActionState,
+                listenWhen: (previous, current) => current is QuizActionState,
+                bloc: quizCubit,
+                builder: (context, state) {
+                  if (state is QuizLoadingDemoState) {
+                    return const CupertinoActivityIndicator(animating: true);
+                  }
 
-                    if (state is QuizDataState) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            "Your Opponent: ${quizCubit.yourOpponent?.username ?? 'Opponent'}",
-                            style: const TextStyle(color: Colors.red),
+                  if (state is QuizDataState) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          "Your Opponent: ${quizCubit.yourOpponent?.username ?? 'Opponent'}",
+                          style: TextStyle(color: Colors.red, fontSize: 18.0),
+                        ),
+                        Text(
+                          "You: ${quizCubit.you?.username ?? 'You'}",
+                          style: TextStyle(color: Colors.pink, fontSize: 18.0),
+                        ),
+                        Text(
+                          state.quizBrain
+                              .quizQuestion(state.quizQuestions)
+                              .toString(),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
                           ),
-                          Text(
-                            "You: ${quizCubit.you?.username ?? 'You'}",
-                            style: const TextStyle(color: Colors.pink),
-                          ),
-                          Text(
-                            state.quizBrain
-                                .quizQuestion(state.quizQuestions)
-                                .toString(),
-                            style: const TextStyle(
-                              color: Colors.white, // Text color
-                              fontSize: 24.0, // Text size
-                            ),
-                          ),
-                          // const SizedBox(height: 20.0),
-                          SizedBox(
-                            height: 150,
-                            width: 241,
-                            child: ListView.builder(
-                              itemCount: state
-                                  .quizQuestions[state.quizBrain.questionNumber]
-                                  .options
-                                  .length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    // log(state.quizBrain
-                                    //     .quizOptions(state.quizQuestions)[index]
-                                    //     .toString());
-                                    // setState(() {
-                                    //   state.quizBrain.toNextQuestion();
-                                    // });
-                                    // log();
-                                    // quizCubit.quizBrain.quizAnswer(state.quizQuestions);
-                                    // quizCubit.userTappedmE(
-                                    //     index,
-                                    //     state.quizBrain.quizOptions(
-                                    //         state.quizQuestions)[index]);
-                                    quizCubit.pickedOption(
-                                        index,
-                                        state.quizBrain.quizOptions(
-                                            state.quizQuestions)[index]);
-                                    //  quizCubit.userTappedmE(index, state.quizQuestions[index].options[index],);
-                                  },
+                        ),
+                        SizedBox(
+                          height: 150,
+                          width: 241,
+                          child: ListView.builder(
+                            itemCount: state
+                                .quizQuestions[state.quizBrain.questionNumber]
+                                .options
+                                .length,
+                            itemBuilder: (context, index) {
+                              return GestureDetector(
+                                onTap: () {
+                                  quizCubit.pickedOption(
+                                    index,
+                                    state.quizBrain.quizOptions(
+                                        state.quizQuestions)[index],
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(12.0),
+                                  margin:
+                                      const EdgeInsets.symmetric(vertical: 6.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.teal,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
                                   child: Text(
-                                    // ignore: prefer_interpolation_to_compose_strings
                                     "${index + 1}: " +
                                         state.quizBrain.quizOptions(
                                             state.quizQuestions)[index],
-                                    style: const TextStyle(color: Colors.white),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Your Score
+                            StreamBuilder<UserModel?>(
+                              stream: quizCubit
+                                  .showUserScoreStream(quizCubit.you!.userUID!),
+                              builder: (context, snapshot) {
+                                final isLoading = snapshot.connectionState ==
+                                    ConnectionState.waiting;
+                                final hasData = snapshot.hasData;
+
+                                return Column(
+                                  children: [
+                                    const Text(
+                                      "Your Score",
+                                      style: TextStyle(
+                                        color: Colors.green,
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    isLoading
+                                        ? const CircularProgressIndicator()
+                                        : hasData
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      " Correct : ${snapshot.data!.correctAnswer ?? 0}",
+                                                      style: const TextStyle(
+                                                        color: Colors.green,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      " Wrong : ${snapshot.data!.wrong ?? 0}",
+                                                      style: const TextStyle(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : const Text("No Data Available"),
+                                  ],
                                 );
                               },
                             ),
-                          ),
 
-                          Row(
-                            children: [
-                              // Your Score
-                              StreamBuilder(
-                                stream: quizCubit.showUserScoreStream(
-                                    quizCubit.you!.userUID!),
-                                builder: (context, snapshot) {
-                                  final isLoading = snapshot.connectionState ==
-                                      ConnectionState.waiting;
-                                  final hasData = snapshot.hasData;
+                            // Opponent's Score
+                            StreamBuilder<UserModel?>(
+                              stream: quizCubit.showUserScoreStream(
+                                  quizCubit.yourOpponent!.userUID!),
+                              builder: (context, snapshot) {
+                                final isLoading = snapshot.connectionState ==
+                                    ConnectionState.waiting;
+                                final hasData = snapshot.hasData;
 
-                                  return Column(
-                                    children: [
-                                      const Text("Your Score"),
-                                      isLoading
-                                          ? const CircularProgressIndicator() // Show a loading indicator
-                                          : hasData
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                          " Correct : ${snapshot.data!.correctAnswer}"),
-                                                      Text(
-                                                          " Wrong : ${snapshot.data!.wrong}"),
-                                                    ],
-                                                  ),
-                                                )
-                                              : const Text("No Data Available"),
-                                    ],
-                                  );
-                                },
-                              ),
-
-                              // Opponent's Score
-                              StreamBuilder(
-                                stream: quizCubit.showUserScoreStream(
-                                    quizCubit.yourOpponent!.userUID!),
-                                builder: (context, snapshot) {
-                                  final isLoading = snapshot.connectionState ==
-                                      ConnectionState.waiting;
-                                  final hasData = snapshot.hasData;
-
-                                  return Column(
-                                    children: [
-                                      const Text("Opponent's Score"),
-                                      isLoading
-                                          ? const CircularProgressIndicator() // Show a loading indicator
-                                          : hasData
-                                              ? Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    children: [
-                                                      Text(
-                                                          " Correct : ${snapshot.data!.correctAnswer}"),
-                                                      Text(
-                                                          " Wrong : ${snapshot.data!.wrong}"),
-                                                    ],
-                                                  ),
-                                                )
-                                              : const Text("No Data Available"),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-
-                          // Text(
-                          //     "Your correct answers ${quizCubit.me?.correctAnswer ?? "sad"}"),
-                          // Text(
-                          //     "Your wrong answers ${quizCubit.me?.incorrectAnswer ?? "sad"}"),
-                          // // Text(
-                          //     "Your opponent correct answers ${quizCubit.participant?.correctAnswer ?? "sad"}"),
-                          // Text(
-                          // "Your opponent wrong answers ${quizCubit.participant?.correctAnswer ?? "sad"}"),
-                          //  if (state is QuizScoreUpdateState)
-                          // Text(quizCubit.you?.correctAnswer == null
-                          //     ? "sad"
-                          //     : "${quizCubit.you!.correctAnswer.toString()} Your Correct Answer"),
-                          // Text(quizCubit.you?.wrong == null
-                          //     ? "no sad"
-                          //     : "${quizCubit.you!.wrong.toString()} Your Wrong answer"),
-                          // // =---
-                          // Text(quizCubit.yourOpponent?.correctAnswer == null
-                          //     ? "sad"
-                          //     : "${quizCubit.yourOpponent!.correctAnswer.toString()} Opponent corect answer"),
-                          // Text(quizCubit.yourOpponent?.wrong == null
-                          //     ? "no sad"
-                          //     : "${quizCubit.yourOpponent!.wrong.toString()} Opponent Wrong answer "),
-                        ],
-                      );
-                    }
-                    return const Text("123333");
-                  }),
+                                return Column(
+                                  children: [
+                                   const Text(
+                                      "Opponent's Score",
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: 18.0,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    isLoading
+                                        ? const CircularProgressIndicator()
+                                        : hasData
+                                            ? Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      " Correct : ${snapshot.data!.correctAnswer ?? 0}",
+                                                      style: const TextStyle(
+                                                        color: Colors.green,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      " Wrong : ${snapshot.data!.wrong ?? 0}",
+                                                      style: const TextStyle(
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              )
+                                            : const Text("No Data Available"),
+                                  ],
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    );
+                  }
+                  return const Text("123333");
+                },
+              ),
             ],
           ),
         ),
@@ -244,4 +256,3 @@ class _QuizScreenState extends State<QuizScreen> {
     );
   }
 }
-

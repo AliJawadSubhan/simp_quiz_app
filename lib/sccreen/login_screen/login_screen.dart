@@ -141,7 +141,7 @@ class LoginScreen extends StatelessWidget {
                             loginCubit.userUILogic(nameController.text.trim());
                           },
                           child: Container(
-                            height: MediaQuery.of(context).size.height * 0.1,
+                            height: MediaQuery.of(context).size.height * 0.07,
                             width: double.infinity,
                             alignment: Alignment.center,
                             padding: const EdgeInsets.all(

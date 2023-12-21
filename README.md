@@ -1,16 +1,4 @@
-# simp_quiz_app
 
-A new Flutter project.
 
-## Getting Started
+https://github.com/AliJawadSubhan/simp_quiz_app/assets/97254328/61f8ed4b-a0ef-4932-89d1-e0802d6384bf
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
